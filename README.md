@@ -80,11 +80,9 @@ gulp.task('css', function () {
 
 ## Mixins
 
-This plugin support 3 types of mixins.
-
 ### CSS Mixin
 
-Simple template directly defined in CSS to prevent repeating yourself.
+Simple template defined directly in CSS to prevent repeating yourself.
 
 See [postcss-simple-vars] docs for arguments syntax.
 
@@ -107,7 +105,7 @@ You can use it with [postcss-nested] plugin:
 }
 ```
 
-There is no `if` or `for` statements, instead of Sass. If you need some
+Unlike Sass, PostCSS has no `if` or `for` statements. If you need some
 complicated logic, you should use function mixin.
 
 [postcss-nested]:      https://github.com/postcss/postcss-nested
@@ -115,12 +113,16 @@ complicated logic, you should use function mixin.
 
 ### Function Mixin
 
-This type of mixin gives you full power of JavaScript to make any magic
-in mixin. Yoou can define this mixins in `mixins` option.
+This type of mixin gives you full power of JavaScript.
+You can define this mixins in `mixins` option.
 
 This type is ideal for CSS hacks or business logic.
 
-See [PostCSS API] to know what you can do in function.
+First argument will be `@mixin` node, that called this mixin.
+You can insert your declarations or rule before or after this node.
+Other arguments will be taken from at-rule parameters.
+
+See [PostCSS API] about nodes API.
 
 ```js
 require('postcss-mixins')({
@@ -149,7 +151,7 @@ require('postcss-mixins')({
 .icon.icon-secret { background: url(signin/secret.svg) }
 ```
 
-You can also return object if you doesn’t want to create each node by hands:
+You can also return object if you doesn’t want to create each node manually:
 
 ```js
 require('postcss-mixins')({
@@ -170,7 +172,7 @@ require('postcss-mixins')({
 }
 ```
 
-Or you can use object directly instead of function:
+Or you can use object instead of function:
 
 ```js
 require('postcss-mixins')({
@@ -202,7 +204,7 @@ Object of function mixins.
 
 ### `mixinsDir`
 
-Load all mixins from this dirs. File name will be taken for mixin name.
+Autoload all mixins from this dirs. Mixin name will be taken from file name.=
 
 ```js
 // gulpfile.js
