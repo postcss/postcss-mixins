@@ -35,6 +35,6 @@ describe('postcss-mixins', function () {
                 none: function (rule) { }
             }
         });
-    })
+    });
 
 });
