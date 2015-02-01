@@ -200,6 +200,28 @@ Call plugin function to set options:
 
 Object of function mixins.
 
+### `mixinsDir`
+
+Load all mixins from this dirs. File name will be taken for mixin name.
+
+```js
+# gulpfile.js
+
+require('postcss-mixins')({
+  mixinsDir: 'mixins/'
+})
+
+# mixins/clearfix.js
+
+module.exports = {
+    '&::after': {
+        content: '""',
+        display: 'table',
+        clear: 'both'
+    }
+}
+```
+
 ### `silent`
 
 Remove unknown mixins and do not throw a error. Default is `false`.

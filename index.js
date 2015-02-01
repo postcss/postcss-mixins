@@ -1,6 +1,8 @@
 var postcss = require('postcss');
 var list    = require('postcss/lib/list');
 var vars    = require('postcss-simple-vars');
+var path    = require('path');
+var fs      = require('fs');
 
 var stringToAtRule = function (str, obj) {
     obj.name   = str.match(/^@([^\s]*)/)[1];
@@ -79,9 +81,28 @@ var defineMixin = function (mixins, rule) {
 module.exports = function (opts) {
     if ( typeof(opts) == 'undefined' ) opts = { };
 
+    var i;
     var mixins = { };
+
+    if ( opts.mixinsDir ) {
+        var dirs = opts.mixinsDir;
+        if ( !(dirs instanceof Array) ) dirs = [dirs];
+
+        for ( i = 0; i < dirs.length; i++ ) {
+            var dir   = dirs[i];
+            var files = fs.readdirSync(dir);
+            for ( var j = 0; j < files.length; j++ ) {
+                var file = path.join(dir, files[j]);
+                if ( path.extname(file) == '.js' ) {
+                    var name = path.basename(file, '.js');
+                    mixins[name] = require(file);
+                }
+            }
+        }
+    }
+
     if ( typeof(opts.mixins) == 'object' ) {
-        for ( var i in opts.mixins ) mixins[i] = opts.mixins[i];
+        for ( i in opts.mixins ) mixins[i] = opts.mixins[i];
     }
 
     return function (css) {

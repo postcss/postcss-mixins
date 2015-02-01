@@ -1,5 +1,6 @@
 var postcss = require('postcss');
 var expect  = require('chai').expect;
+var path    = require('path');
 
 var mixins = require('../');
 
@@ -71,6 +72,21 @@ describe('postcss-mixins', function () {
         test('@define-mixin color $color { color: $color $other; } ' +
              'a { @mixin color black; }',
              'a { color: black $other; }');
+    });
+
+    it('loads mixins from dir', function () {
+        test('a { @mixin a 1; @mixin b; }', 'a { a: 1; b: 2; }', {
+            mixinsDir: path.join(__dirname, 'mixins')
+        });
+    });
+
+    it('loads mixins from dirs', function () {
+        test('a { @mixin a 1; @mixin c; }', 'a { a: 1; c: 3; }', {
+            mixinsDir: [
+                path.join(__dirname, 'mixins'),
+                path.join(__dirname, 'other')
+            ]
+        });
     });
 
 });
