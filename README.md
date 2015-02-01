@@ -4,6 +4,9 @@
 
 [PostCSS] plugin for mixins.
 
+Note, that you must set this plugin before [postcss-simple-vars]
+and [postcss-nested].
+
 ```css
 @define-mixin icon $network $color {
     .icon.is-$(network) {
@@ -36,8 +39,9 @@
 }
 ```
 
-[PostCSS]: https://github.com/postcss/postcss
-
+[PostCSS]:             https://github.com/postcss/postcss
+[postcss-nested]:      https://github.com/postcss/postcss-nested
+[postcss-simple-vars]: https://github.com/postcss/postcss-simple-vars
 
 ## Usage
 
@@ -73,3 +77,129 @@ gulp.task('css', function () {
         .pipe(gulp.dest('./dest'));
 });
 ```
+
+## Mixins
+
+This plugin support 3 types of mixins.
+
+### CSS Mixin
+
+Simple template directly defined in CSS to prevent repeating yourself.
+
+See [postcss-simple-vars] docs for arguments syntax.
+
+You can use it with [postcss-nested] plugin:
+
+```css
+@define-mixin icon $name {
+    padding-left: 16px;
+    &::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        content: "";
+        background-url: url(/icons/$(name).png);
+    }
+}
+
+.search {
+    @mixin icon search;
+}
+```
+
+There is no `if` or `for` statements, instead of Sass. If you need some
+complicated logic, you should use function mixin.
+
+[postcss-nested]:      https://github.com/postcss/postcss-nested
+[postcss-simple-vars]: https://github.com/postcss/postcss-simple-vars
+
+### Function Mixin
+
+This type of mixin gives you full power of JavaScript to make any magic
+in mixin. Yoou can define this mixins in `mixins` option.
+
+This type is ideal for CSS hacks or business logic.
+
+See [PostCSS API] to know what you can do in function.
+
+```js
+require('postcss-mixins')({
+    mixins: {
+        icons: function (mixin, dir) {
+            fs.readdirSync('/images/' + dir).forEach(function (file) {
+                var icon = file.replace(/\.svg$/, '');
+                var rule = postcss.rule('.icon.icon-' + icon);
+                rule.append({
+                    prop:  'background',
+                    value: 'url(' + dir + '/' + file ')'
+                });
+                mixin.insertBefore(rule);
+            });
+        }
+    }
+});
+```
+
+```css
+@mixin icons signin;
+```
+
+```css
+.icon.icon-back { background: url(signin/back.svg) }
+.icon.icon-secret { background: url(signin/secret.svg) }
+```
+
+You can also return object if you doesn’t want to create each node by hands:
+
+```js
+require('postcss-mixins')({
+    mixins: {
+        hidpi: function (path) {
+            return {
+                '&': {
+                    background: 'url(' + path + ')'
+                },
+                '@media (min-resolution: 120dpi)': {
+                    '&': {
+                        background: 'url(' + path + '@2x)'
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+Or you can use object directly instead of function:
+
+```js
+require('postcss-mixins')({
+    mixins: {
+        clearfix: {
+            '&::after': {
+                content: '""',
+                display: 'table',
+                clear: 'both'
+            }
+        }
+    }
+}
+```
+
+[PostCSS API]: https://github.com/postcss/postcss#write-own-processor
+
+## Options
+
+Call plugin function to set options:
+
+```js
+.pipe(postcss([ require('postcss-mixins')({ mixins: { … } }) ]))
+```
+
+### `mixins`
+
+Object of function mixins.
+
+### `silent`
+
+Remove unknown mixins and do not throw a error. Default is `false`.
