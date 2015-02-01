@@ -62,4 +62,9 @@ describe('postcss-mixins', function () {
         });
     });
 
+    it('supports CSS mixins', function () {
+        test('@define-mixin black { color: black; } a { @mixin black; }',
+             'a { color: black; }');
+    });
+
 });

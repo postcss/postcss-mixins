@@ -44,6 +44,9 @@ var insertMixin = function (mixins, rule, opts) {
             throw rule.error('Undefined mixin ' + name);
         }
 
+    } else if ( mixin.name == 'define-mixin' ) {
+        rule.parent.insertBefore(rule, mixin.clone().nodes);
+
     } else if ( typeof(mixin) == 'object' ) {
         insertObject(rule, mixin, rule.source);
 
@@ -56,6 +59,13 @@ var insertMixin = function (mixins, rule, opts) {
     }
 
     if ( rule.parent ) rule.removeSelf();
+};
+
+var defineMixin = function (mixins, rule) {
+    var params = list.space(rule.params);
+    var name   = params.shift();
+    mixins[name] = rule;
+    rule.removeSelf();
 };
 
 module.exports = function (opts) {
@@ -71,6 +81,8 @@ module.exports = function (opts) {
 
             if ( rule.name == 'mixin' ) {
                 insertMixin(mixins, rule, opts);
+            } else if ( rule.name == 'define-mixin' ) {
+                defineMixin(mixins, rule);
             }
 
         });
