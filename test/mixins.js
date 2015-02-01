@@ -37,4 +37,29 @@ describe('postcss-mixins', function () {
         });
     });
 
+    it('converts object from function to nodes', function () {
+        test('a { @mixin color black; }', 'a { color: black; }', {
+            mixins: {
+                color: function (rule, color) {
+                    return { color: color };
+                }
+            }
+        });
+    });
+
+    it('supports object mixins', function () {
+        test('@mixin obj;',
+             '@media screen {\n    b {\n        one: 1\n    }\n}', {
+            mixins: {
+                obj: {
+                    '@media screen': {
+                        'b': {
+                            one: 1
+                        }
+                    }
+                }
+            }
+        });
+    });
+
 });
