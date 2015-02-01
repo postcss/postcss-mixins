@@ -205,13 +205,13 @@ Object of function mixins.
 Load all mixins from this dirs. File name will be taken for mixin name.
 
 ```js
-# gulpfile.js
+// gulpfile.js
 
 require('postcss-mixins')({
   mixinsDir: 'mixins/'
 })
 
-# mixins/clearfix.js
+// mixins/clearfix.js
 
 module.exports = {
     '&::after': {
