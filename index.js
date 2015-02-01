@@ -1,5 +1,6 @@
 var postcss = require('postcss');
 var list    = require('postcss/lib/list');
+var vars    = require('postcss-simple-vars');
 
 var stringToAtRule = function (str, obj) {
     obj.name   = str.match(/^@([^\s]*)/)[1];
@@ -45,7 +46,14 @@ var insertMixin = function (mixins, rule, opts) {
         }
 
     } else if ( mixin.name == 'define-mixin' ) {
-        rule.parent.insertBefore(rule, mixin.clone().nodes);
+        var names  = mixin.params.split(' ');
+        var values = { };
+        for ( var i = 1; i < names.length; i++ ) {
+            values[ names[i].slice(1) ] = params[i - 1] || '';
+        }
+        var content = mixin.clone();
+        vars({ only: values })(content);
+        rule.parent.insertBefore(rule, content.nodes);
 
     } else if ( typeof(mixin) == 'object' ) {
         insertObject(rule, mixin, rule.source);

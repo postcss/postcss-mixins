@@ -67,4 +67,10 @@ describe('postcss-mixins', function () {
              'a { color: black; }');
     });
 
+    it('uses variables in CSS mixins', function () {
+        test('@define-mixin color $color { color: $color $other; } ' +
+             'a { @mixin color black; }',
+             'a { color: black $other; }');
+    });
+
 });
