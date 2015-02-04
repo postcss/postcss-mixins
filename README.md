@@ -45,38 +45,21 @@ and [postcss-nested].
 
 ## Usage
 
-See [PostCSS] docs for source map options and other special cases.
-
-[PostCSS]: https://github.com/postcss/postcss
-
-### Grunt
+Without options:
 
 ```js
-grunt.initConfig({
-    postcss: {
-        options: {
-            processors: [ require('postcss-mixins').postcss ]
-        },
-        dist: {
-            src: 'css/*.css'
-        }
-    }
-});
-
-grunt.loadNpmTasks('grunt-postcss');
+postcss([ require('postcss-mixins') ])
 ```
 
-### Gulp
+With options:
 
 ```js
-var postcss = require('gulp-postcss');
-
-gulp.task('css', function () {
-     return gulp.src('./src/*.css')
-        .pipe(postcss([ require('postcss-mixins') ]))
-        .pipe(gulp.dest('./dest'));
-});
+postcss([
+    require('postcss-mixins')({ mixinsDir: __dirname + '/mixins/' })
+])
 ```
+
+See [PostCSS] docs for examples for your environment.
 
 ## Mixins
 
