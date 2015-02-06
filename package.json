@@ -10,7 +10,7 @@
         "url":  "https://github.com/postcss/postcss-mixins.git"
     },
     "dependencies": {
-        "postcss-simple-vars": "~0.1.0",
+        "postcss-simple-vars": "~0.2.3",
         "postcss":             "^4.0.3"
     },
     "devDependencies": {
