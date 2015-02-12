@@ -101,6 +101,10 @@ You can define this mixins in `mixins` option.
 
 This type is ideal for CSS hacks or business logic.
 
+Also you should use function mixin if you need to change property names
+in mixin, because [postcss-simple-vars] doesn’t support variables
+in properties yet.
+
 First argument will be `@mixin` node, that called this mixin.
 You can insert your declarations or rule before or after this node.
 Other arguments will be taken from at-rule parameters.
