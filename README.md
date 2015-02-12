@@ -122,7 +122,7 @@ require('postcss-mixins')({
                     prop:  'background',
                     value: 'url(' + dir + '/' + file ')'
                 });
-                mixin.insertBefore(rule);
+                mixin.replaceWith(rule);
             });
         }
     }
