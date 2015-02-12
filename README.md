@@ -175,7 +175,7 @@ require('postcss-mixins')({
 }
 ```
 
-[PostCSS API]: https://github.com/postcss/postcss#write-own-processor
+[PostCSS API]: https://github.com/postcss/postcss/blob/master/API.md
 
 ## Options
 
