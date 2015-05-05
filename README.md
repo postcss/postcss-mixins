@@ -1,6 +1,8 @@
-# PostCSS Mixins [![Build Status](https://travis-ci.org/postcss/postcss-mixins.svg)](https://travis-ci.org/postcss/postcss-mixins)
+# PostCSS Mixins [![Build Status][ci-img]][ci]
 
-<img align="right" width="135" height="95" src="http://postcss.github.io/postcss/logo-leftp.png" title="Philosopher’s stone, logo of PostCSS">
+<img align="right" width="135" height="95"
+     title="Philosopher’s stone, logo of PostCSS"
+     src="http://postcss.github.io/postcss/logo-leftp.png">
 
 [PostCSS] plugin for mixins.
 
@@ -39,9 +41,11 @@ and [postcss-nested].
 }
 ```
 
-[PostCSS]:             https://github.com/postcss/postcss
-[postcss-nested]:      https://github.com/postcss/postcss-nested
 [postcss-simple-vars]: https://github.com/postcss/postcss-simple-vars
+[postcss-nested]:      https://github.com/postcss/postcss-nested
+[PostCSS]:             https://github.com/postcss/postcss
+[ci-img]:              https://travis-ci.org/postcss/postcss-mixins.svg
+[ci]:                  https://travis-ci.org/postcss/postcss-mixins
 
 ## Usage
 
@@ -88,7 +92,7 @@ You can use it with [postcss-nested] plugin:
 }
 ```
 
-Unlike Sass, PostCSS has no `if` or `for` statements. If you need some
+Unlike Sass, PostCSS has no `if` or `while` statements. If you need some
 complicated logic, you should use function mixin.
 
 [postcss-nested]:      https://github.com/postcss/postcss-nested
