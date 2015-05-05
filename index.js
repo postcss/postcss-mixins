@@ -1,5 +1,4 @@
 var postcss = require('postcss');
-var list    = require('postcss/lib/list');
 var vars    = require('postcss-simple-vars');
 var path    = require('path');
 var fs      = require('fs');
@@ -36,7 +35,7 @@ var insertObject = function (rule, obj) {
 };
 
 var insertMixin = function (mixins, rule, opts) {
-    var params = list.space(rule.params);
+    var params = postcss.list.space(rule.params);
     var name   = params.shift();
     var mixin  = mixins[name];
 
@@ -86,7 +85,7 @@ var defineMixin = function (mixins, rule) {
     rule.removeSelf();
 };
 
-module.exports = function (opts) {
+module.exports = postcss.plugin('postcss-mixins', function (opts) {
     if ( typeof opts === 'undefined' ) opts = { };
 
     var i;
@@ -124,8 +123,4 @@ module.exports = function (opts) {
 
         });
     };
-};
-
-module.exports.postcss = function (css) {
-    module.exports()(css);
-};
+});
