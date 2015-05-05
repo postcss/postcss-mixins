@@ -33,7 +33,7 @@ describe('postcss-mixins', function () {
     it('removes mixin at-rule', function () {
         test('a { @mixin none; }', 'a { }', {
             mixins: {
-                none: function (rule) { }
+                none: function () { }
             }
         });
     });

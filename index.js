@@ -14,14 +14,14 @@ var objectToNodes = function (node, obj, source) {
     var name, value, decl, rule;
     for ( name in obj ) {
         value = obj[name];
-        if ( typeof(value) == 'object' ) {
-            if ( name[0] == '@' ) {
+        if ( typeof value === 'object' ) {
+            if ( name[0] === '@' ) {
                 rule = postcss.atRule(stringToAtRule(name, { source: source }));
             } else {
                 rule = postcss.rule({ selector: name, source: source });
             }
             node.append(rule);
-            if ( typeof(value) == 'object' ) objectToNodes(rule, value, source);
+            if ( typeof value === 'object' ) objectToNodes(rule, value, source);
         } else {
             decl = postcss.decl({ prop: name, value: value, source: source });
             node.append(decl);
@@ -40,14 +40,12 @@ var insertMixin = function (mixins, rule, opts) {
     var name   = params.shift();
     var mixin  = mixins[name];
 
-    var root;
-
     if ( !mixin ) {
         if ( !opts.silent ) {
             throw rule.error('Undefined mixin ' + name);
         }
 
-    } else if ( mixin.name == 'define-mixin' ) {
+    } else if ( mixin.name === 'define-mixin' ) {
         var names   = mixin.params.split(/\s/);
         var values  = { };
         var present = false;
@@ -68,13 +66,13 @@ var insertMixin = function (mixins, rule, opts) {
 
         rule.parent.insertBefore(rule, clones);
 
-    } else if ( typeof(mixin) == 'object' ) {
+    } else if ( typeof mixin === 'object' ) {
         insertObject(rule, mixin, rule.source);
 
-    } else if ( typeof(mixin) == 'function' ) {
+    } else if ( typeof mixin === 'function' ) {
         var args   = [rule].concat(params);
         var result = mixin.apply(this, args);
-        if ( typeof(result) == 'object' ) {
+        if ( typeof result === 'object' ) {
             insertObject(rule, result, rule.source);
         }
     }
@@ -89,7 +87,7 @@ var defineMixin = function (mixins, rule) {
 };
 
 module.exports = function (opts) {
-    if ( typeof(opts) == 'undefined' ) opts = { };
+    if ( typeof opts === 'undefined' ) opts = { };
 
     var i;
     var mixins = { };
@@ -103,7 +101,7 @@ module.exports = function (opts) {
             var files = fs.readdirSync(dir);
             for ( var j = 0; j < files.length; j++ ) {
                 var file = path.join(dir, files[j]);
-                if ( path.extname(file) == '.js' ) {
+                if ( path.extname(file) === '.js' ) {
                     var name = path.basename(file, '.js');
                     mixins[name] = require(file);
                 }
@@ -111,16 +109,16 @@ module.exports = function (opts) {
         }
     }
 
-    if ( typeof(opts.mixins) == 'object' ) {
+    if ( typeof opts.mixins === 'object' ) {
         for ( i in opts.mixins ) mixins[i] = opts.mixins[i];
     }
 
     return function (css) {
         css.eachAtRule(function (rule) {
 
-            if ( rule.name == 'mixin' ) {
+            if ( rule.name === 'mixin' ) {
                 insertMixin(mixins, rule, opts);
-            } else if ( rule.name == 'define-mixin' ) {
+            } else if ( rule.name === 'define-mixin' ) {
                 defineMixin(mixins, rule);
             }
 
