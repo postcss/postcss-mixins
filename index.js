@@ -48,14 +48,25 @@ var insertMixin = function (mixins, rule, opts) {
         }
 
     } else if ( mixin.name == 'define-mixin' ) {
-        var names  = mixin.params.split(' ');
-        var values = { };
+        var names   = mixin.params.split(/\s/);
+        var values  = { };
+        var present = false;
         for ( var i = 1; i < names.length; i++ ) {
+            present = true;
             values[ names[i].slice(1) ] = params[i - 1] || '';
         }
-        var content = mixin.clone();
-        vars({ only: values })(content);
-        rule.parent.insertBefore(rule, content.nodes);
+
+        var clones = [];
+        for ( i = 0; i < mixin.nodes.length; i++ ) {
+            clones.push( mixin.nodes[i].clone() );
+        }
+
+        if ( present ) {
+            var proxy = postcss.rule({ nodes: clones });
+            vars({ only: values })(proxy);
+        }
+
+        rule.parent.insertBefore(rule, clones);
 
     } else if ( typeof(mixin) == 'object' ) {
         insertObject(rule, mixin, rule.source);
@@ -72,8 +83,7 @@ var insertMixin = function (mixins, rule, opts) {
 };
 
 var defineMixin = function (mixins, rule) {
-    var params = list.space(rule.params);
-    var name   = params.shift();
+    var name = rule.params.split(/\s/)[0];
     mixins[name] = rule;
     rule.removeSelf();
 };
