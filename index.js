@@ -22,7 +22,11 @@ var objectToNodes = function (node, obj, source) {
             node.append(rule);
             if ( typeof value === 'object' ) objectToNodes(rule, value, source);
         } else {
-            decl = postcss.decl({ prop: name, value: value, source: source });
+            decl = postcss.decl({
+                prop:   name,
+                value:  value.toString(),
+                source: source
+            });
             node.append(decl);
         }
     }

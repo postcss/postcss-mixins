@@ -89,4 +89,16 @@ describe('postcss-mixins', function () {
         });
     });
 
+    it('coverts mixins values', function () {
+        var proccessor = postcss(mixins({
+            mixins: {
+                empty: function (rule) {
+                    return { width: 0 };
+                }
+            }
+        }));
+        var result = proccessor.process('a{ @mixin empty; }');
+        expect(result.root.first.first.value).to.be.a('string');
+    });
+
 });
