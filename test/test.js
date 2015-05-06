@@ -92,7 +92,7 @@ describe('postcss-mixins', function () {
     it('coverts mixins values', function () {
         var proccessor = postcss(mixins({
             mixins: {
-                empty: function (rule) {
+                empty: function () {
                     return { width: 0 };
                 }
             }
