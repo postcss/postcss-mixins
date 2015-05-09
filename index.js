@@ -41,20 +41,21 @@ var insertObject = function (rule, obj) {
 var insertMixin = function (mixins, rule, opts) {
     var params = postcss.list.space(rule.params);
     var name   = params.shift();
-    var mixin  = mixins[name];
+    var meta   = mixins[name]
+    var mixin  = meta && meta.mixin;
 
-    if ( !mixin ) {
+    if ( !meta ) {
         if ( !opts.silent ) {
             throw rule.error('Undefined mixin ' + name);
         }
 
     } else if ( mixin.name === 'define-mixin' ) {
-        var names   = mixin.params.split(/\s/);
+        var names   = meta.names;
         var values  = { };
         var present = false;
-        for ( var i = 1; i < names.length; i++ ) {
+        for ( var i = 0; i < names.length; i++ ) {
             present = true;
-            values[ names[i].slice(1) ] = params[i - 1] || '';
+            values[ names[i] ] = params[i] || '';
         }
 
         var clones = [];
@@ -84,8 +85,14 @@ var insertMixin = function (mixins, rule, opts) {
 };
 
 var defineMixin = function (mixins, rule) {
-    var name = rule.params.split(/\s/)[0];
-    mixins[name] = rule;
+    var names = rule.params.split(/\s/);
+    var name  = names.shift();
+
+    names = names.map(function (i) {
+        return i.slice(1);
+    });
+
+    mixins[name] = { mixin: rule, names: names };
     rule.removeSelf();
 };
 
@@ -106,14 +113,14 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
                 var file = path.join(dir, files[j]);
                 if ( path.extname(file) === '.js' ) {
                     var name = path.basename(file, '.js');
-                    mixins[name] = require(file);
+                    mixins[name] = { mixin: require(file) };
                 }
             }
         }
     }
 
     if ( typeof opts.mixins === 'object' ) {
-        for ( i in opts.mixins ) mixins[i] = opts.mixins[i];
+        for ( i in opts.mixins ) mixins[i] = { mixin: opts.mixins[i] };
     }
 
     return function (css) {
