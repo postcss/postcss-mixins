@@ -186,7 +186,7 @@ require('postcss-mixins')({
 Call plugin function to set options:
 
 ```js
-.pipe(postcss([ require('postcss-mixins')({ mixins: { … } }) ]))
+postcss([ require('postcss-mixins')({ mixins: { … } }) ])
 ```
 
 ### `mixins`
