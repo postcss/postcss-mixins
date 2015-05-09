@@ -101,4 +101,9 @@ describe('postcss-mixins', function () {
         expect(result.root.first.first.value).to.be.a('string');
     });
 
+    it('supports mixins with content', function () {
+        test('@define-mixin m { @media { @mixin-content; } } @mixin m { a {} }',
+             '@media {\n    a {}\n}');
+    });
+
 });

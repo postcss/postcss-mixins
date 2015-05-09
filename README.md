@@ -92,6 +92,22 @@ You can use it with [postcss-nested] plugin:
 }
 ```
 
+You can pass a block to mixin:
+
+```css
+@define-mixin hover {
+    &:hover, &.is-hover {
+        @mixin-content;
+    }
+}
+
+a {
+    @mixin hover {
+        color: red;
+    }
+}
+```
+
 Unlike Sass, PostCSS has no `if` or `while` statements. If you need some
 complicated logic, you should use function mixin.
 
