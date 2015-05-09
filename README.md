@@ -195,7 +195,7 @@ Object of function mixins.
 
 ### `mixinsDir`
 
-Autoload all mixins from this dirs. Mixin name will be taken from file name.=
+Autoload all mixins from this dirs. Mixin name will be taken from file name.
 
 ```js
 // gulpfile.js
