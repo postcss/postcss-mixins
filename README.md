@@ -217,7 +217,7 @@ Autoload all mixins from this dirs. Mixin name will be taken from file name.
 // gulpfile.js
 
 require('postcss-mixins')({
-  mixinsDir: 'mixins/'
+    mixinsDir: path.join(__dirname, 'mixins/')
 })
 
 // mixins/clearfix.js
