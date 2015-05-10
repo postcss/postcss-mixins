@@ -114,7 +114,7 @@ describe('postcss-mixins', function () {
     });
 
     it('supports variables with and without default values in CSS mixins', function () {
-        test('@define-mixin color $color1 $color2: red { color: $color1 $color2; } ' +
+        test('@define-mixin color $color1, $color2: red { color: $color1 $color2; } ' +
              'a { @mixin color black; }',
              'a { color: black red; }');
     });

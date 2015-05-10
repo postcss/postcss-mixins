@@ -3,8 +3,6 @@ var vars    = require('postcss-simple-vars');
 var path    = require('path');
 var fs      = require('fs');
 
-var RE_PARAMETER_DECLARATION = (/\$(.+?)(?::\s*(.+?))?(?:,|\s+|$)/);
-
 var stringToAtRule = function (str, obj) {
     obj.name   = str.match(/^@([^\s]*)/)[1];
     obj.params = str.replace(/^@[^\s]*\s+/, '');
@@ -52,19 +50,18 @@ var insertMixin = function (mixins, rule, opts) {
         }
 
     } else if ( mixin.name === 'define-mixin' ) {
-        var values    = { };
-        var variables = meta.variableList;
-        Object.keys(meta.variableList).forEach(function(index) {
-            values[variables[index].name] = params[index] || variables[index].defaultValue || '';
-        });
+        var values = { };
+        for ( var i = 0; i < meta.args.length; i++ ) {
+            values[ meta.args[i][0] ] = params[i] || meta.args[i][1];
+        }
 
         var clones = [];
-        for (var i = 0; i < mixin.nodes.length; i++ ) {
+        for ( i = 0; i < mixin.nodes.length; i++ ) {
             clones.push( mixin.nodes[i].clone() );
         }
 
         var proxy = postcss.rule({ nodes: clones });
-        if ( variables.length ) {
+        if ( meta.args.length ) {
             vars({ only: values })(proxy);
         }
         if ( meta.content ) {
@@ -89,29 +86,25 @@ var insertMixin = function (mixins, rule, opts) {
     if ( rule.parent ) rule.removeSelf();
 };
 
-var defineMixin = function (mixins, rule) {
-    var names = rule.params.split(/\s/);
-    var name  = names.shift();
-    var parameterString = names.join(' ');
+var defineMixin = function (result, mixins, rule) {
+    var name  = rule.params.split(/\s/, 1)[0];
+    var other = rule.params.slice(name.length).trim();
 
-    var variableList = [];
-    var parameterRegex = new RegExp(RE_PARAMETER_DECLARATION.source, 'g');
-    var matches;
-    while ((matches = parameterRegex.exec(parameterString)) !== null) {
-        // javascript RegExp has a bug when the match has length 0
-        if (matches.index === parameterRegex.lastIndex) {
-            ++parameterRegex.lastIndex;
+    var args = [];
+    if ( other.length ) {
+        if ( other.indexOf(',') === -1 && other.indexOf(':') === -1 ) {
+            args = other.split(/\s/).map(function (str) {
+                return [str.slice(1), ''];
+            });
+
+        } else {
+            args = postcss.list.comma(other).map(function(str) {
+                var arg      = str.split(':', 1)[0];
+                var defaults = str.slice(arg.length + 1);
+                return [arg.slice(1).trim(), defaults.trim()];
+            });
         }
-
-        var variableName = matches[1];
-        var variableDefaultValue = matches[2] !== undefined ? matches[2].trim() : undefined;
-
-        variableList.push({
-            name: variableName,
-            defaultValue: variableDefaultValue
-        });
     }
-
 
     var content = false;
     rule.eachAtRule('mixin-content', function () {
@@ -119,7 +112,7 @@ var defineMixin = function (mixins, rule) {
         return false;
     });
 
-    mixins[name] = { mixin: rule, variableList: variableList, content: content };
+    mixins[name] = { mixin: rule, args: args, content: content };
     rule.removeSelf();
 };
 
@@ -150,13 +143,13 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
         for ( i in opts.mixins ) mixins[i] = { mixin: opts.mixins[i] };
     }
 
-    return function (css) {
+    return function (css, result) {
         css.eachAtRule(function (rule) {
 
             if ( rule.name === 'mixin' ) {
                 insertMixin(mixins, rule, opts);
             } else if ( rule.name === 'define-mixin' ) {
-                defineMixin(mixins, rule);
+                defineMixin(result, mixins, rule);
             }
 
         });
