@@ -106,4 +106,24 @@ describe('postcss-mixins', function () {
              '@media {\n    a {}\n}');
     });
 
+
+    it('supports default values for variables in CSS mixins', function () {
+        test('@define-mixin color $color: black { color: $color $other; } ' +
+             'a { @mixin color; }',
+             'a { color: black $other; }');
+    });
+
+    it('supports variables with and without default values in CSS mixins', function () {
+        test('@define-mixin color $color1 $color2: red { color: $color1 $color2; } ' +
+             'a { @mixin color black; }',
+             'a { color: black red; }');
+    });
+
+    it('supports multiple variables with default values for in CSS mixins that are comma separated', function () {
+        test('@define-mixin color $color1: black, $color2: red { color: $color1 $color2; } ' +
+             'a { @mixin color; }',
+             'a { color: black red; }');
+    });
+
+
 });

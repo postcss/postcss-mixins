@@ -3,6 +3,8 @@ var vars    = require('postcss-simple-vars');
 var path    = require('path');
 var fs      = require('fs');
 
+var RE_PARAMETER_DECLARATION = (/\$(.+?)(?::\s*(.+?))?(?:,|\s+|$)/);
+
 var stringToAtRule = function (str, obj) {
     obj.name   = str.match(/^@([^\s]*)/)[1];
     obj.params = str.replace(/^@[^\s]*\s+/, '');
@@ -50,19 +52,19 @@ var insertMixin = function (mixins, rule, opts) {
         }
 
     } else if ( mixin.name === 'define-mixin' ) {
-        var names   = meta.names;
-        var values  = { };
-        for ( var i = 0; i < names.length; i++ ) {
-            values[ names[i] ] = params[i] || '';
-        }
+        var values    = { };
+        var variables = meta.variableList;
+        Object.keys(meta.variableList).forEach(function(index) {
+            values[variables[index].name] = params[index] || variables[index].defaultValue || '';
+        });
 
         var clones = [];
-        for ( i = 0; i < mixin.nodes.length; i++ ) {
+        for (var i = 0; i < mixin.nodes.length; i++ ) {
             clones.push( mixin.nodes[i].clone() );
         }
 
         var proxy = postcss.rule({ nodes: clones });
-        if ( names.length ) {
+        if ( variables.length ) {
             vars({ only: values })(proxy);
         }
         if ( meta.content ) {
@@ -90,10 +92,26 @@ var insertMixin = function (mixins, rule, opts) {
 var defineMixin = function (mixins, rule) {
     var names = rule.params.split(/\s/);
     var name  = names.shift();
+    var parameterString = names.join(' ');
 
-    names = names.map(function (i) {
-        return i.slice(1);
-    });
+    var variableList = [];
+    var parameterRegex = new RegExp(RE_PARAMETER_DECLARATION.source, 'g');
+    var matches;
+    while ((matches = parameterRegex.exec(parameterString)) !== null) {
+        // javascript RegExp has a bug when the match has length 0
+        if (matches.index === parameterRegex.lastIndex) {
+            ++parameterRegex.lastIndex;
+        }
+
+        var variableName = matches[1];
+        var variableDefaultValue = matches[2] !== undefined ? matches[2].trim() : undefined;
+
+        variableList.push({
+            name: variableName,
+            defaultValue: variableDefaultValue
+        });
+    }
+
 
     var content = false;
     rule.eachAtRule('mixin-content', function () {
@@ -101,7 +119,7 @@ var defineMixin = function (mixins, rule) {
         return false;
     });
 
-    mixins[name] = { mixin: rule, names: names, content: content };
+    mixins[name] = { mixin: rule, variableList: variableList, content: content };
     rule.removeSelf();
 };
 
