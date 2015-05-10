@@ -10,7 +10,7 @@ Note, that you must set this plugin before [postcss-simple-vars]
 and [postcss-nested].
 
 ```css
-@define-mixin icon $network $color {
+@define-mixin icon $network, $color: blue {
     .icon.is-$(network) {
         color: $color;
     }
@@ -20,7 +20,7 @@ and [postcss-nested].
     }
 }
 
-@mixin icon twitter blue;
+@mixin icon twitter;
 @mixin icon youtube red;
 ```
 
@@ -79,27 +79,6 @@ You can use it with [postcss-nested] plugin:
 @define-mixin icon $name {
     padding-left: 16px;
     &::after {
-        position: absolute;
-        top: 0;
-        left: 0;
-        content: "";
-        background-url: url(/icons/$(name).png);
-    }
-}
-
-.search {
-    @mixin icon search;
-}
-```
-
-You can define default values for variables:
-```css
-@define-mixin icon $name, $padding: 16px {
-    padding-left: $(padding);
-    &::after {
-        position: absolute;
-        top: 0;
-        left: 0;
         content: "";
         background-url: url(/icons/$(name).png);
     }
