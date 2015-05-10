@@ -92,6 +92,24 @@ You can use it with [postcss-nested] plugin:
 }
 ```
 
+You can define default values for variables:
+```css
+@define-mixin icon $name, $padding: 16px {
+    padding-left: $(padding);
+    &::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        content: "";
+        background-url: url(/icons/$(name).png);
+    }
+}
+
+.search {
+    @mixin icon search;
+}
+```
+
 You can pass a block to mixin:
 
 ```css
