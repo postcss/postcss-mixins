@@ -85,7 +85,7 @@ describe('postcss-mixins', function () {
     });
 
     it('uses variables', function () {
-        test('@define-mixin m $a, $b: b, $c: c { v: $a $b $c; } @mixin m 1 2;',
+        test('@define-mixin m $a, $b: b, $c: c { v: $a $b $c; } @mixin m 1, 2;',
              'v: 1 2 c;');
     });
 
@@ -116,13 +116,9 @@ describe('postcss-mixins', function () {
         expect(result.root.first.first.value).to.be.a('string');
     });
 
-    describe('deprecated', function () {
-
-        it('supports old variables syntax', function () {
-            test('@define-mixin m $a $b $c { v: $a $b $c; } @mixin m 1 2 3;',
-                 'v: 1 2 3;');
-        });
-
+    it('supports deprecated variables syntax', function () {
+        test('@define-mixin m $a $b $c { v: $a $b $c; } @mixin m 1 2 3;',
+             'v: 1 2 3;');
     });
 
 });

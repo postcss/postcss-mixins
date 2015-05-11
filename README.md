@@ -21,7 +21,7 @@ and [postcss-nested].
 }
 
 @mixin icon twitter;
-@mixin icon youtube red;
+@mixin icon youtube, red;
 ```
 
 ```css

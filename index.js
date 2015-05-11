@@ -39,8 +39,14 @@ var insertObject = function (rule, obj) {
 };
 
 var insertMixin = function (mixins, rule, opts) {
-    var params = postcss.list.space(rule.params);
-    var name   = params.shift();
+    var name   = rule.params.split(/\s/, 1)[0];
+    var params = rule.params.slice(name.length).trim();
+    if ( params.indexOf(',') === -1 ) {
+        params = postcss.list.space(params);
+    } else {
+        params = postcss.list.comma(params);
+    }
+
     var meta   = mixins[name];
     var mixin  = meta && meta.mixin;
 
