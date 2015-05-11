@@ -89,7 +89,7 @@ var insertMixin = function (result, mixins, rule, opts) {
     } else if ( typeof mixin === 'function' ) {
         var args  = [rule].concat(params);
         var nodes = mixin.apply(this, args);
-        if ( typeof result === 'object' ) {
+        if ( typeof nodes === 'object' ) {
             insertObject(rule, nodes, rule.source);
         }
     }
