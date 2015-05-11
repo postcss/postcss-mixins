@@ -11,7 +11,7 @@
     },
     "dependencies": {
         "postcss-simple-vars": "^0.3.0",
-        "postcss":             "^4.1.9"
+        "postcss":             "^4.1.10"
     },
     "devDependencies": {
         "gulp-eslint": "0.12.0",
