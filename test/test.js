@@ -68,10 +68,25 @@ describe('postcss-mixins', function () {
              'a { color: black; }');
     });
 
-    it('uses variables in CSS mixins', function () {
+    it('uses variable', function () {
         test('@define-mixin color $color { color: $color $other; } ' +
              'a { @mixin color black; }',
              'a { color: black $other; }');
+    });
+
+    it('supports default value', function () {
+        test('@define-mixin c $color: black { color: $color; } a { @mixin c; }',
+             'a { color: black; }');
+    });
+
+    it('supports mixins with content', function () {
+        test('@define-mixin m { @media { @mixin-content; } } @mixin m { a {} }',
+             '@media {\n    a {}\n}');
+    });
+
+    it('uses variables', function () {
+        test('@define-mixin m $a, $b: b, $c: c { v: $a $b $c; } @mixin m 1 2;',
+             'v: 1 2 c;');
     });
 
     it('loads mixins from dir', function () {
@@ -101,29 +116,13 @@ describe('postcss-mixins', function () {
         expect(result.root.first.first.value).to.be.a('string');
     });
 
-    it('supports mixins with content', function () {
-        test('@define-mixin m { @media { @mixin-content; } } @mixin m { a {} }',
-             '@media {\n    a {}\n}');
+    describe('deprecated', function () {
+
+        it('supports old variables syntax', function () {
+            test('@define-mixin m $a $b $c { v: $a $b $c; } @mixin m 1 2 3;',
+                 'v: 1 2 3;');
+        });
+
     });
-
-
-    it('supports default values for variables in CSS mixins', function () {
-        test('@define-mixin color $color: black { color: $color $other; } ' +
-             'a { @mixin color; }',
-             'a { color: black $other; }');
-    });
-
-    it('supports variables with and without default values in CSS mixins', function () {
-        test('@define-mixin color $color1, $color2: red { color: $color1 $color2; } ' +
-             'a { @mixin color black; }',
-             'a { color: black red; }');
-    });
-
-    it('supports multiple variables with default values for in CSS mixins that are comma separated', function () {
-        test('@define-mixin color $color1: black, $color2: red { color: $color1 $color2; } ' +
-             'a { @mixin color; }',
-             'a { color: black red; }');
-    });
-
 
 });
