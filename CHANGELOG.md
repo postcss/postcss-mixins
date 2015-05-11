@@ -1,3 +1,8 @@
+## 0.3
+* Change syntax to comma separated arguments.
+  Use: `@mixin name 1, 2` instead of `@mixin name 1 2`.
+* Add default value for arguments.
+
 ## 0.2
 * Add block mixins support.
 * Support PostCSS 4.1 API.
