@@ -13,6 +13,8 @@ and [postcss-nested].
 @define-mixin icon $network, $color: blue {
     .icon.is-$(network) {
         color: $color;
+        @mixin-content;
+        backgroun-position: $position;
     }
     .icon.is-$(network):hover {
         color: white;
@@ -20,13 +22,18 @@ and [postcss-nested].
     }
 }
 
-@mixin icon twitter;
-@mixin icon youtube, red;
+@mixin icon twitter {
+    background: url(twt.png);
+}
+@mixin icon youtube, red {
+    background: url(youtube.png);
+}
 ```
 
 ```css
 .icon.is-twitter {
     color: blue;
+    background: url(twt.png);
 }
 .icon.is-twitter:hover {
     color: white;
@@ -34,6 +41,7 @@ and [postcss-nested].
 }
 .icon.is-youtube {
     color: red;
+    background: url(youtube.png);
 }
 .icon.is-youtube:hover {
     color: white;
@@ -49,18 +57,8 @@ and [postcss-nested].
 
 ## Usage
 
-Without options:
-
 ```js
 postcss([ require('postcss-mixins') ])
-```
-
-With options:
-
-```js
-postcss([
-    require('postcss-mixins')({ mixinsDir: __dirname + '/mixins/' })
-])
 ```
 
 See [PostCSS] docs for examples for your environment.
@@ -86,22 +84,6 @@ You can use it with [postcss-nested] plugin:
 
 .search {
     @mixin icon search;
-}
-```
-
-You can pass a block to mixin:
-
-```css
-@define-mixin hover {
-    &:hover, &.is-hover {
-        @mixin-content;
-    }
-}
-
-a {
-    @mixin hover {
-        color: red;
-    }
 }
 ```
 
