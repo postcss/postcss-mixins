@@ -38,11 +38,16 @@ var insertObject = function (rule, obj) {
     rule.parent.insertBefore(rule, root);
 };
 
-var insertMixin = function (mixins, rule, opts) {
+var insertMixin = function (result, mixins, rule, opts) {
     var name   = rule.params.split(/\s/, 1)[0];
     var params = rule.params.slice(name.length).trim();
     if ( params.indexOf(',') === -1 ) {
         params = postcss.list.space(params);
+        if ( params.length > 1 ) {
+            result.warn('Space argument separation is depreacted and ' +
+                        'will be removed in next version. Use comma.',
+                        { node: rule });
+        }
     } else {
         params = postcss.list.comma(params);
     }
@@ -82,10 +87,10 @@ var insertMixin = function (mixins, rule, opts) {
         insertObject(rule, mixin, rule.source);
 
     } else if ( typeof mixin === 'function' ) {
-        var args   = [rule].concat(params);
-        var result = mixin.apply(this, args);
+        var args  = [rule].concat(params);
+        var nodes = mixin.apply(this, args);
         if ( typeof result === 'object' ) {
-            insertObject(rule, result, rule.source);
+            insertObject(rule, nodes, rule.source);
         }
     }
 
@@ -102,6 +107,11 @@ var defineMixin = function (result, mixins, rule) {
             args = other.split(/\s/).map(function (str) {
                 return [str.slice(1), ''];
             });
+            if ( args.length > 1 ) {
+                result.warn('Space argument separation is depreacted and ' +
+                            'will be removed in next version. Use comma.',
+                            { node: rule });
+            }
 
         } else {
             args = postcss.list.comma(other).map(function(str) {
@@ -153,7 +163,7 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
         css.eachAtRule(function (rule) {
 
             if ( rule.name === 'mixin' ) {
-                insertMixin(mixins, rule, opts);
+                insertMixin(result, mixins, rule, opts);
             } else if ( rule.name === 'define-mixin' ) {
                 defineMixin(result, mixins, rule);
             }

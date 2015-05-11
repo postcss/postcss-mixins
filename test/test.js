@@ -5,7 +5,9 @@ var path    = require('path');
 var mixins = require('../');
 
 var test = function (input, output, opts) {
-    expect(postcss(mixins(opts)).process(input).css).to.eql(output);
+    var result = postcss(mixins(opts)).process(input);
+    expect(result.css).to.eql(output);
+    expect(result.warnings()).to.be.empty;
 };
 
 describe('postcss-mixins', function () {
@@ -117,8 +119,10 @@ describe('postcss-mixins', function () {
     });
 
     it('supports deprecated variables syntax', function () {
-        test('@define-mixin m $a $b $c { v: $a $b $c; } @mixin m 1 2 3;',
-             'v: 1 2 3;');
+        var result = postcss(mixins).process(
+            '@define-mixin m $a $b $c { v: $a $b $c; } @mixin m 1 2 3;');
+        expect(result.css).to.eql('v: 1 2 3;');
+        expect(result.warnings()).to.have.length(2);
     });
 
 });
