@@ -14,7 +14,6 @@ and [postcss-nested].
     .icon.is-$(network) {
         color: $color;
         @mixin-content;
-        backgroun-position: $position;
     }
     .icon.is-$(network):hover {
         color: white;
