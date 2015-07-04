@@ -48,11 +48,14 @@ and [postcss-nested].
 }
 ```
 
-[postcss-simple-vars]: https://github.com/postcss/postcss-simple-vars
-[postcss-nested]:      https://github.com/postcss/postcss-nested
-[PostCSS]:             https://github.com/postcss/postcss
-[ci-img]:              https://travis-ci.org/postcss/postcss-mixins.svg
-[ci]:                  https://travis-ci.org/postcss/postcss-mixins
+See also [postcss-define-property] for some simple cases.
+
+[postcss-define-property]: https://github.com/daleeidd/postcss-define-property
+[postcss-simple-vars]:     https://github.com/postcss/postcss-simple-vars
+[postcss-nested]:          https://github.com/postcss/postcss-nested
+[PostCSS]:                 https://github.com/postcss/postcss
+[ci-img]:                  https://travis-ci.org/postcss/postcss-mixins.svg
+[ci]:                      https://travis-ci.org/postcss/postcss-mixins
 
 ## Usage
 
