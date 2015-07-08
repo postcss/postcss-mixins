@@ -125,4 +125,15 @@ describe('postcss-mixins', function () {
         expect(result.warnings()).to.have.length(2);
     });
 
+    it('supports mixin keyword naming', function () {
+        test(
+            '@mixin black { color: black; } a { @include black; }',
+            'a { color: black; }',
+            {
+                defineKeyword: 'mixin',
+                usageKeyword: 'include'
+            }
+        );
+    });
+
 });
