@@ -60,7 +60,7 @@ var insertMixin = function (result, mixins, rule, opts) {
             throw rule.error('Undefined mixin ' + name);
         }
 
-    } else if ( mixin.name === 'define-mixin' ) {
+    } else if ( mixin.name === opts.defineKeyword ) {
         var values = { };
         for ( var i = 0; i < meta.args.length; i++ ) {
             values[ meta.args[i][0] ] = params[i] || meta.args[i][1];
@@ -76,7 +76,7 @@ var insertMixin = function (result, mixins, rule, opts) {
             vars({ only: values })(proxy);
         }
         if ( meta.content ) {
-            proxy.eachAtRule('mixin-content', function (place) {
+            proxy.eachAtRule(opts.contentKeyword, function (place) {
                 place.replaceWith(rule.nodes);
             });
         }
@@ -97,7 +97,7 @@ var insertMixin = function (result, mixins, rule, opts) {
     if ( rule.parent ) rule.removeSelf();
 };
 
-var defineMixin = function (result, mixins, rule) {
+var defineMixin = function (result, mixins, rule, opts) {
     var name  = rule.params.split(/\s/, 1)[0];
     var other = rule.params.slice(name.length).trim();
 
@@ -123,7 +123,7 @@ var defineMixin = function (result, mixins, rule) {
     }
 
     var content = false;
-    rule.eachAtRule('mixin-content', function () {
+    rule.eachAtRule(opts.contentKeyword, function () {
         content = true;
         return false;
     });
@@ -155,6 +155,18 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
         }
     }
 
+    if ( !( 'contentKeyword' in opts ) ) {
+        opts.contentKeyword = 'mixin-content';
+    }
+
+    if ( !( 'defineKeyword' in opts ) ) {
+        opts.defineKeyword = 'define-mixin';
+    }
+
+    if ( !( 'usageKeyword' in opts ) ) {
+        opts.usageKeyword = 'mixin';
+    }
+
     if ( typeof opts.mixins === 'object' ) {
         for ( i in opts.mixins ) mixins[i] = { mixin: opts.mixins[i] };
     }
@@ -162,10 +174,10 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
     return function (css, result) {
         css.eachAtRule(function (rule) {
 
-            if ( rule.name === 'mixin' ) {
+            if ( rule.name === opts.usageKeyword ) {
                 insertMixin(result, mixins, rule, opts);
-            } else if ( rule.name === 'define-mixin' ) {
-                defineMixin(result, mixins, rule);
+            } else if ( rule.name === opts.defineKeyword ) {
+                defineMixin(result, mixins, rule, opts);
             }
 
         });
