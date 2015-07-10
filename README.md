@@ -10,10 +10,10 @@ Note, that you must set this plugin before [postcss-simple-vars]
 and [postcss-nested].
 
 ```css
-@define-mixin icon $network, $color: blue {
+@mixin icon $network, $color: blue {
     .icon.is-$(network) {
         color: $color;
-        @mixin-content;
+        @content;
     }
     .icon.is-$(network):hover {
         color: white;
@@ -21,10 +21,10 @@ and [postcss-nested].
     }
 }
 
-@mixin icon twitter {
+@include icon twitter {
     background: url(twt.png);
 }
-@mixin icon youtube, red {
+@include icon youtube, red {
     background: url(youtube.png);
 }
 ```
@@ -76,7 +76,7 @@ See [postcss-simple-vars] docs for arguments syntax.
 You can use it with [postcss-nested] plugin:
 
 ```css
-@define-mixin icon $name {
+@mixin icon $name {
     padding-left: 16px;
     &::after {
         content: "";
@@ -85,7 +85,7 @@ You can use it with [postcss-nested] plugin:
 }
 
 .search {
-    @mixin icon search;
+    @include icon search;
 }
 ```
 
@@ -106,7 +106,7 @@ Also you should use function mixin if you need to change property names
 in mixin, because [postcss-simple-vars] doesn’t support variables
 in properties yet.
 
-First argument will be `@mixin` node, that called this mixin.
+First argument will be `@include` node, that called this mixin.
 You can insert your declarations or rule before or after this node.
 Other arguments will be taken from at-rule parameters.
 
@@ -131,7 +131,7 @@ require('postcss-mixins')({
 ```
 
 ```css
-@mixin icons signin;
+@include icons signin;
 ```
 
 ```css
