@@ -188,17 +188,22 @@ postcss([ require('postcss-mixins')({ mixins: { … } }) ])
 
 ### `mixins`
 
+Type: `Object`
+
 Object of function mixins.
 
 ### `mixinsDir`
 
-Autoload all mixins from this dirs. Mixin name will be taken from file name.
+Type: `string|string[]`
+
+Autoload all mixins from one or more dirs. Mixin name will be taken from file
+name.
 
 ```js
 // gulpfile.js
 
 require('postcss-mixins')({
-    mixinsDir: path.join(__dirname, 'mixins/')
+    mixinsDir: path.join(__dirname, 'mixins')
 })
 
 // mixins/clearfix.js
@@ -210,6 +215,20 @@ module.exports = {
         clear: 'both'
     }
 }
+```
+
+### `mixinsFiles`
+
+Type: `string|string[]`
+
+Similar to [`mixinsDir`](#mixinsdir); except, you can provide
+[glob](https://github.com/isaacs/node-glob) syntax to target or not target
+specific files.
+
+```js
+require('postcss-mixins')({
+    mixinsFiles: path.join(__dirname, 'mixins', '!(*.spec.js)')
+})
 ```
 
 ### `silent`

@@ -106,6 +106,21 @@ describe('postcss-mixins', function () {
         });
     });
 
+    it('loads mixins from file glob', function () {
+        test('a { @mixin a 1; @mixin b; }', 'a { a: 1; b: 2; }', {
+            mixinsFiles: path.join(__dirname, 'mixins', '*.js')
+        });
+    });
+
+    it('loads mixins from file globs', function () {
+        test('a { @mixin a 1; @mixin c; }', 'a { a: 1; c: 3; }', {
+            mixinsFiles: [
+                path.join(__dirname, 'mixins', '!(b.js)'),
+                path.join(__dirname, 'other', '*')
+            ]
+        });
+    });
+
     it('coverts mixins values', function () {
         var proccessor = postcss(mixins({
             mixins: {
