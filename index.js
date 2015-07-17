@@ -2,6 +2,7 @@ var postcss = require('postcss');
 var vars    = require('postcss-simple-vars');
 var path    = require('path');
 var fs      = require('fs');
+var glob    = require('glob');
 
 var stringToAtRule = function (str, obj) {
     obj.name   = str.match(/^@([^\s]*)/)[1];
@@ -153,6 +154,18 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
                 }
             }
         }
+    }
+
+    if ( opts.mixinsFiles ) {
+        var globs = opts.mixinsFiles;
+        if ( !(globs instanceof Array) ) globs = [globs];
+
+        globs.forEach(function(pattern) {
+            glob.sync(pattern).forEach(function(file2) {
+                var name2 = path.basename(file2, path.extname(file2));
+                mixins[name2] = { mixin: require(file2) };
+            });
+        });
     }
 
     if ( typeof opts.mixins === 'object' ) {
