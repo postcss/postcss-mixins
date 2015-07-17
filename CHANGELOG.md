@@ -1,3 +1,6 @@
+## 0.4
+* Add `mixinsFiles` option (by Jed Mao).
+
 ## 0.3
 * Change syntax to comma separated arguments.
   Use: `@mixin name 1, 2` instead of `@mixin name 1 2`.
