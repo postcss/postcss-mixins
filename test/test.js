@@ -52,17 +52,17 @@ describe('postcss-mixins', function () {
 
     it('supports object mixins', function () {
         test('@mixin obj;',
-             '@media screen {\n    b {\n        one: 1\n    }\n}', {
-            mixins: {
-                obj: {
-                    '@media screen': {
-                        'b': {
-                            one: 1
+            '@media screen {\n    b {\n        one: 1\n    }\n}', {
+                mixins: {
+                    obj: {
+                        '@media screen': {
+                            b: {
+                                one: 1
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
     });
 
     it('supports CSS mixins', function () {

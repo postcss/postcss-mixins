@@ -62,9 +62,10 @@ var insertMixin = function (result, mixins, rule, opts) {
         }
 
     } else if ( mixin.name === 'define-mixin' ) {
+        var i;
         var values = { };
-        for ( var i = 0; i < meta.args.length; i++ ) {
-            values[ meta.args[i][0] ] = params[i] || meta.args[i][1];
+        for ( i = 0; i < meta.args.length; i++ ) {
+            values[meta.args[i][0]] = params[i] || meta.args[i][1];
         }
 
         var clones = [];
@@ -115,7 +116,7 @@ var defineMixin = function (result, mixins, rule) {
             }
 
         } else {
-            args = postcss.list.comma(other).map(function(str) {
+            args = postcss.list.comma(other).map(function (str) {
                 var arg      = str.split(':', 1)[0];
                 var defaults = str.slice(arg.length + 1);
                 return [arg.slice(1).trim(), defaults.trim()];
@@ -160,8 +161,8 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
         var globs = opts.mixinsFiles;
         if ( !(globs instanceof Array) ) globs = [globs];
 
-        globs.forEach(function(pattern) {
-            glob.sync(pattern).forEach(function(file2) {
+        globs.forEach(function (pattern) {
+            glob.sync(pattern).forEach(function (file2) {
                 var name2 = path.basename(file2, path.extname(file2));
                 mixins[name2] = { mixin: require(file2) };
             });
