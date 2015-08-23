@@ -1,3 +1,6 @@
+## 1.0
+* Use PostCSS 5.0 API.
+
 ## 0.4
 * Add `mixinsFiles` option (by Jed Mao).
 
