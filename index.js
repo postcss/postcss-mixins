@@ -78,7 +78,7 @@ var insertMixin = function (result, mixins, rule, opts) {
             vars({ only: values })(proxy);
         }
         if ( meta.content ) {
-            proxy.eachAtRule('mixin-content', function (place) {
+            proxy.walkAtRules('mixin-content', function (place) {
                 place.replaceWith(rule.nodes);
             });
         }
@@ -96,7 +96,7 @@ var insertMixin = function (result, mixins, rule, opts) {
         }
     }
 
-    if ( rule.parent ) rule.removeSelf();
+    if ( rule.parent ) rule.remove();
 };
 
 var defineMixin = function (result, mixins, rule) {
@@ -125,13 +125,13 @@ var defineMixin = function (result, mixins, rule) {
     }
 
     var content = false;
-    rule.eachAtRule('mixin-content', function () {
+    rule.walkAtRules('mixin-content', function () {
         content = true;
         return false;
     });
 
     mixins[name] = { mixin: rule, args: args, content: content };
-    rule.removeSelf();
+    rule.remove();
 };
 
 module.exports = postcss.plugin('postcss-mixins', function (opts) {
@@ -174,7 +174,7 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
     }
 
     return function (css, result) {
-        css.eachAtRule(function (rule) {
+        css.walkAtRules(function (rule) {
 
             if ( rule.name === 'mixin' ) {
                 insertMixin(result, mixins, rule, opts);
