@@ -139,7 +139,7 @@ require('postcss-mixins')({
 .icon.icon-secret { background: url(signin/secret.svg) }
 ```
 
-You can also return object if you doesn’t want to create each node manually:
+You can also return an object if you don’t want to create each node manually:
 
 ```js
 require('postcss-mixins')({
