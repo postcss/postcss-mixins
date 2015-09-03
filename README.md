@@ -121,7 +121,7 @@ require('postcss-mixins')({
                 var rule = postcss.rule('.icon.icon-' + icon);
                 rule.append({
                     prop:  'background',
-                    value: 'url(' + dir + '/' + file+')'
+                    value: 'url(' + dir + '/' + file + ')'
                 });
                 mixin.replaceWith(rule);
             });
