@@ -1,3 +1,6 @@
+## 1.0.1
+* Fix using relative URL in `mixinsDir` (by Bogdan Chadkin).
+
 ## 1.0
 * Use PostCSS 5.0 API.
 
