@@ -97,11 +97,26 @@ describe('postcss-mixins', function () {
         });
     });
 
+    it('loads mixins from relative dir', function () {
+        test('a { @mixin a 1; @mixin b; }', 'a { a: 1; b: 2; }', {
+            mixinsDir: 'test/mixins'
+        });
+    });
+
     it('loads mixins from dirs', function () {
         test('a { @mixin a 1; @mixin c; }', 'a { a: 1; c: 3; }', {
             mixinsDir: [
                 path.join(__dirname, 'mixins'),
                 path.join(__dirname, 'other')
+            ]
+        });
+    });
+
+    it('loads mixins from dirs', function () {
+        test('a { @mixin a 1; @mixin c; }', 'a { a: 1; c: 3; }', {
+            mixinsDir: [
+                'test/mixins',
+                'test/other'
             ]
         });
     });
