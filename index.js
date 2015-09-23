@@ -139,22 +139,23 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
 
     var i;
     var mixins = { };
+    var cwd = process.cwd();
 
     if ( opts.mixinsDir ) {
         var dirs = opts.mixinsDir;
         if ( !(dirs instanceof Array) ) dirs = [dirs];
 
-        for ( i = 0; i < dirs.length; i++ ) {
-            var dir   = dirs[i];
+        dirs.forEach(function (dir) {
             var files = fs.readdirSync(dir);
             for ( var j = 0; j < files.length; j++ ) {
                 var file = path.join(dir, files[j]);
                 if ( path.extname(file) === '.js' ) {
                     var name = path.basename(file, '.js');
+                    file = path.join(cwd, path.relative(cwd, file));
                     mixins[name] = { mixin: require(file) };
                 }
             }
-        }
+        });
     }
 
     if ( opts.mixinsFiles ) {
@@ -162,9 +163,10 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
         if ( !(globs instanceof Array) ) globs = [globs];
 
         globs.forEach(function (pattern) {
-            glob.sync(pattern).forEach(function (file2) {
-                var name2 = path.basename(file2, path.extname(file2));
-                mixins[name2] = { mixin: require(file2) };
+            glob.sync(pattern).forEach(function (file) {
+                var name = path.basename(file, path.extname(file));
+                file = path.join(cwd, path.relative(cwd, file));
+                mixins[name] = { mixin: require(file) };
             });
         });
     }
