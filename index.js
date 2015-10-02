@@ -1,8 +1,7 @@
 var postcss = require('postcss');
 var vars    = require('postcss-simple-vars');
 var path    = require('path');
-var fs      = require('fs');
-var glob    = require('glob');
+var globby  = require('globby');
 
 var stringToAtRule = function (str, obj) {
     obj.name   = str.match(/^@([^\s]*)/)[1];
@@ -140,50 +139,45 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
     var i;
     var mixins = { };
     var cwd = process.cwd();
+    var globs = [];
 
     if ( opts.mixinsDir ) {
-        var dirs = opts.mixinsDir;
-        if ( !(dirs instanceof Array) ) dirs = [dirs];
+        console.warn('postcss-mixins: `mixinsDir` option is deprecated.' +
+                     'Use `mixinsFiles`');
+        if ( !Array.isArray(opts.mixinsDir) ) {
+            opts.mixinsDir = [opts.mixinsDir];
+        }
 
-        dirs.forEach(function (dir) {
-            var files = fs.readdirSync(dir);
-            for ( var j = 0; j < files.length; j++ ) {
-                var file = path.join(dir, files[j]);
-                if ( path.extname(file) === '.js' ) {
-                    var name = path.basename(file, '.js');
-                    file = path.join(cwd, path.relative(cwd, file));
-                    mixins[name] = { mixin: require(file) };
-                }
-            }
+        globs = opts.mixinsDir.map(function (dir) {
+            return path.join(dir, '*.{js,json}');
         });
     }
 
     if ( opts.mixinsFiles ) {
-        var globs = opts.mixinsFiles;
-        if ( !(globs instanceof Array) ) globs = [globs];
+        globs = globs.concat(opts.mixinsFiles);
+    }
 
-        globs.forEach(function (pattern) {
-            glob.sync(pattern).forEach(function (file) {
+    return function (css, result) {
+        return globby(globs).then(function (files) {
+            files.forEach(function (file) {
                 var name = path.basename(file, path.extname(file));
                 file = path.join(cwd, path.relative(cwd, file));
                 mixins[name] = { mixin: require(file) };
             });
-        });
-    }
 
-    if ( typeof opts.mixins === 'object' ) {
-        for ( i in opts.mixins ) mixins[i] = { mixin: opts.mixins[i] };
-    }
-
-    return function (css, result) {
-        css.walkAtRules(function (rule) {
-
-            if ( rule.name === 'mixin' ) {
-                insertMixin(result, mixins, rule, opts);
-            } else if ( rule.name === 'define-mixin' ) {
-                defineMixin(result, mixins, rule);
+            if ( typeof opts.mixins === 'object' ) {
+                for ( i in opts.mixins ) {
+                    mixins[i] = { mixin: opts.mixins[i] };
+                }
             }
 
+            css.walkAtRules(function (rule) {
+                if ( rule.name === 'mixin' ) {
+                    insertMixin(result, mixins, rule, opts);
+                } else if ( rule.name === 'define-mixin' ) {
+                    defineMixin(result, mixins, rule);
+                }
+            });
         });
     };
 });
