@@ -150,9 +150,7 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
         });
     }
 
-    if ( opts.mixinsFiles ) {
-        globs = globs.concat(opts.mixinsFiles);
-    }
+    if ( opts.mixinsFiles ) globs = globs.concat(opts.mixinsFiles);
 
     return function (css, result) {
         return globby(globs).then(function (files) {
