@@ -1,3 +1,7 @@
+## 1.0.2
+* Do not throw error on missed mixin dir (by Bogdan Chadkin).
+* Use async plugin API (by Bogdan Chadkin).
+
 ## 1.0.1
 * Fix using relative URL in `mixinsDir` (by Bogdan Chadkin).
 
