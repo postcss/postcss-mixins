@@ -137,19 +137,16 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
     if ( typeof opts === 'undefined' ) opts = { };
 
     var i;
+    var cwd    = process.cwd();
+    var globs  = [];
     var mixins = { };
-    var cwd = process.cwd();
-    var globs = [];
 
     if ( opts.mixinsDir ) {
-        console.warn('postcss-mixins: `mixinsDir` option is deprecated.' +
-                     'Use `mixinsFiles`');
         if ( !Array.isArray(opts.mixinsDir) ) {
             opts.mixinsDir = [opts.mixinsDir];
         }
-
         globs = opts.mixinsDir.map(function (dir) {
-            return path.join(dir, '*.{js,json}');
+            return path.join(dir, '*.js');
         });
     }
 
