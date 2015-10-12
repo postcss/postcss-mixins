@@ -5,17 +5,18 @@ var path    = require('path');
 var mixins = require('../');
 
 var test = function (input, output, opts) {
-    var result = postcss(mixins(opts)).process(input);
-    expect(result.css).to.eql(output);
-    expect(result.warnings()).to.be.empty;
+    return postcss(mixins(opts)).process(input).then(function (result) {
+        expect(result.css).to.eql(output);
+        expect(result.warnings()).to.be.empty;
+    });
 };
 
 describe('postcss-mixins', function () {
 
     it('throws error on unknown mixin', function () {
-        expect(function () {
-            test('@mixin A');
-        }).to.throw('Undefined mixin A');
+        test('@mixin A').catch(function (err) {
+            expect(err.name).to.eql('Undefined mixin A');
+        });
     });
 
     it('cans remove unknown mixin on request', function () {
@@ -99,7 +100,7 @@ describe('postcss-mixins', function () {
 
     it('loads mixins from relative dir', function () {
         test('a { @mixin a 1; @mixin b; }', 'a { a: 1; b: 2; }', {
-            mixinsDir: 'test/mixins'
+            mixinsDir: 'test/mixins/'
         });
     });
 
@@ -123,7 +124,7 @@ describe('postcss-mixins', function () {
 
     it('loads mixins from file glob', function () {
         test('a { @mixin a 1; @mixin b; }', 'a { a: 1; b: 2; }', {
-            mixinsFiles: path.join(__dirname, 'mixins', '*.js')
+            mixinsFiles: path.join(__dirname, 'mixins', '*.{js,json}')
         });
     });
 
@@ -144,15 +145,18 @@ describe('postcss-mixins', function () {
                 }
             }
         }));
-        var result = proccessor.process('a{ @mixin empty; }');
-        expect(result.root.first.first.value).to.be.a('string');
+        proccessor.process('a{ @mixin empty; }').then(function (result) {
+            expect(result.root.first.first.value).to.be.a('string');
+        });
     });
 
     it('supports deprecated variables syntax', function () {
-        var result = postcss(mixins).process(
-            '@define-mixin m $a $b $c { v: $a $b $c; } @mixin m 1 2 3;');
-        expect(result.css).to.eql('v: 1 2 3;');
-        expect(result.warnings()).to.have.length(2);
+        postcss(mixins).process(
+            '@define-mixin m $a $b $c { v: $a $b $c; } @mixin m 1 2 3;'
+        ).then(function (result) {
+            expect(result.css).to.eql('v: 1 2 3;');
+            expect(result.warnings()).to.have.length(2);
+        });
     });
 
 });
