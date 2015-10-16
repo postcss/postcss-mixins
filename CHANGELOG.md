@@ -1,3 +1,6 @@
+## 2.0
+* `mixinsDir` loads JSON mixins too (by Jed Mao).
+
 ## 1.0.2
 * Do not throw error on missed mixin dir (by Bogdan Chadkin).
 * Use async plugin API (by Bogdan Chadkin).
