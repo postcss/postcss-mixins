@@ -99,15 +99,25 @@ describe('postcss-mixins', function () {
     });
 
     it('loads mixins from dir', function (done) {
-        test('a { @mixin a 1; @mixin b; }', 'a { a: 1; b: 2; }', done, {
-            mixinsDir: path.join(__dirname, 'mixins')
-        });
+        test(
+            'a { @mixin a 1; @mixin b; @mixin d; }',
+            'a { a: 1; b: 2; d: 4; }',
+            done,
+            {
+                mixinsDir: path.join(__dirname, 'mixins')
+            }
+        );
     });
 
     it('loads mixins from relative dir', function (done) {
-        test('a { @mixin a 1; @mixin b; }', 'a { a: 1; b: 2; }', done, {
-            mixinsDir: 'test/mixins/'
-        });
+        test(
+            'a { @mixin a 1; @mixin b; @mixin d; }',
+            'a { a: 1; b: 2; d: 4; }',
+            done,
+            {
+                mixinsDir: 'test/mixins/'
+            }
+        );
     });
 
     it('loads mixins from dirs', function (done) {
@@ -137,7 +147,7 @@ describe('postcss-mixins', function () {
     it('loads mixins from file globs', function (done) {
         test('a { @mixin a 1; @mixin c; }', 'a { a: 1; c: 3; }', done, {
             mixinsFiles: [
-                path.join(__dirname, 'mixins', '!(b.js)'),
+                path.join(__dirname, 'mixins', '*.!(json|css)'),
                 path.join(__dirname, 'other', '*')
             ]
         });
