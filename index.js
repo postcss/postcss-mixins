@@ -146,7 +146,7 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
             opts.mixinsDir = [opts.mixinsDir];
         }
         globs = opts.mixinsDir.map(function (dir) {
-            return path.join(dir, '*.js');
+            return path.join(dir, '*.js?(on)');
         });
     }
 
