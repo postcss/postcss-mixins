@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "postcss-simple-vars": "^1.0.1",
-    "postcss":             "^5.0.9",
+    "postcss":             "^5.0.10",
     "globby":              "^3.0.1"
   },
   "devDependencies": {
