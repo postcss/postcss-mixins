@@ -1,3 +1,6 @@
+## 2.1
+* Add CSS files support for mixins from dir (by Jed Mao).
+
 ## 2.0
 * `mixinsDir` loads JSON mixins too (by Jed Mao).
 
