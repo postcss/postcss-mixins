@@ -2,6 +2,7 @@ var postcss = require('postcss');
 var vars    = require('postcss-simple-vars');
 var path    = require('path');
 var globby  = require('globby');
+var fs      = require('fs');
 
 var stringToAtRule = function (str, obj) {
     obj.name   = str.match(/^@([^\s]*)/)[1];
@@ -133,6 +134,11 @@ var defineMixin = function (result, mixins, rule) {
     rule.remove();
 };
 
+var requireCss = function (filename) {
+    var source = fs.readFileSync(filename);
+    return postcss.parse(source);
+};
+
 module.exports = postcss.plugin('postcss-mixins', function (opts) {
     if ( typeof opts === 'undefined' ) opts = { };
 
@@ -146,17 +152,29 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
             opts.mixinsDir = [opts.mixinsDir];
         }
         globs = opts.mixinsDir.map(function (dir) {
-            return path.join(dir, '*.{json,js}');
+            return path.join(dir, '*.{js,json,css}');
         });
     }
 
     if ( opts.mixinsFiles ) globs = globs.concat(opts.mixinsFiles);
 
     return function (css, result) {
+        var discoverMixins = function (atrule) {
+            if ( atrule.name === 'mixin' ) {
+                insertMixin(result, mixins, atrule, opts);
+            } else if ( atrule.name === 'define-mixin' ) {
+                defineMixin(result, mixins, atrule);
+            }
+        };
         return globby(globs).then(function (files) {
             files.forEach(function (file) {
-                var name = path.basename(file, path.extname(file));
+                var ext = path.extname(file);
+                var name = path.basename(file, ext);
                 file = path.join(cwd, path.relative(cwd, file));
+                if (ext === '.css') {
+                    requireCss(file).walkAtRules(discoverMixins);
+                    return;
+                }
                 mixins[name] = { mixin: require(file) };
             });
 
@@ -166,13 +184,7 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
                 }
             }
 
-            css.walkAtRules(function (rule) {
-                if ( rule.name === 'mixin' ) {
-                    insertMixin(result, mixins, rule, opts);
-                } else if ( rule.name === 'define-mixin' ) {
-                    defineMixin(result, mixins, rule);
-                }
-            });
+            css.walkAtRules(discoverMixins);
         });
     };
 });
