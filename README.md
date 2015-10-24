@@ -215,6 +215,13 @@ module.exports = {
         clear: 'both'
     }
 }
+
+// mixins/size.css
+
+@define-mixin size $size {
+    width: $size;
+    height: $size;
+}
 ```
 
 ### `mixinsFiles`
