@@ -134,11 +134,6 @@ var defineMixin = function (result, mixins, rule) {
     rule.remove();
 };
 
-var requireCss = function (filename) {
-    var source = fs.readFileSync(filename);
-    return postcss.parse(source);
-};
-
 module.exports = postcss.plugin('postcss-mixins', function (opts) {
     if ( typeof opts === 'undefined' ) opts = { };
 
@@ -167,17 +162,24 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
             }
         };
         return globby(globs).then(function (files) {
-            files.forEach(function (file) {
+            return Promise.all(files.map(function (file) {
                 var ext = path.extname(file);
                 var name = path.basename(file, ext);
                 file = path.join(cwd, path.relative(cwd, file));
-                if (ext === '.css') {
-                    requireCss(file).walkAtRules(discoverMixins);
-                    return;
-                }
-                mixins[name] = { mixin: require(file) };
-            });
-
+                return new Promise(function (resolve, reject) {
+                    if (ext === '.css') {
+                        fs.readFile(file, function (err, contents) {
+                            if ( err ) return reject(err);
+                            postcss.parse(contents).walkAtRules(discoverMixins);
+                            resolve();
+                        });
+                        return;
+                    }
+                    mixins[name] = { mixin: require(file) };
+                    resolve();
+                });
+            }));
+        }).then(function () {
             if ( typeof opts.mixins === 'object' ) {
                 for ( i in opts.mixins ) {
                     mixins[i] = { mixin: opts.mixins[i] };
