@@ -1,3 +1,6 @@
+## 2.1.1
+* Async CSS mixin files loading (by Jed Mao).
+
 ## 2.1
 * Add CSS files support for mixins from dir (by Jed Mao).
 
