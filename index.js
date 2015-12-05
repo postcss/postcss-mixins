@@ -174,7 +174,10 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
                     if ( ext.toLowerCase() === '.css' ) {
                         fs.readFile(relative, function (err, contents) {
                             if ( err ) return reject(err);
-                            processMixins(postcss.parse(contents));
+                            postcss.parse(contents)
+                                .walkAtRules('define-mixin', function (atrule) {
+                                    defineMixin(result, mixins, atrule);
+                                });
                             resolve();
                         });
                     } else {
