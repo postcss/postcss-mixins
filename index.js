@@ -165,13 +165,13 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
             });
         };
 
-        return globby(globs).then(function (files) {
+        return globby(globs, { nocase: true }).then(function (files) {
             return Promise.all(files.map(function (file) {
                 var ext      = path.extname(file);
                 var name     = path.basename(file, ext);
                 var relative = path.join(cwd, path.relative(cwd, file));
                 return new Promise(function (resolve, reject) {
-                    if ( ext === '.css' ) {
+                    if ( ext.toLowerCase() === '.css' ) {
                         fs.readFile(relative, function (err, contents) {
                             if ( err ) return reject(err);
                             processMixins(postcss.parse(contents));
