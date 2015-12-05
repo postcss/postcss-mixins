@@ -1,7 +1,7 @@
 ## 3.0
 * Add nested mixins support.
-* Use `postcss-js` to conver object to CSS in JS mixins.
-* Case insentive mixin file search.
+* Use `postcss-js` to convert objects into CSS in JS mixins.
+* Case insensitive mixin file search.
 
 ## 2.1.1
 * Async CSS mixin files loading (by Jed Mao).
