@@ -1,41 +1,15 @@
+var jsToCss = require('postcss-js/parser');
 var postcss = require('postcss');
 var globby  = require('globby');
 var vars    = require('postcss-simple-vars');
 var path    = require('path');
 var fs      = require('fs');
 
-var stringToAtRule = function (str, obj) {
-    obj.name   = str.match(/^@([^\s]*)/)[1];
-    obj.params = str.replace(/^@[^\s]*\s+/, '');
-    return obj;
-};
-
-var objectToNodes = function (node, obj, source) {
-    var name, value, decl, rule;
-    for ( name in obj ) {
-        value = obj[name];
-        if ( typeof value === 'object' ) {
-            if ( name[0] === '@' ) {
-                rule = postcss.atRule(stringToAtRule(name, { source: source }));
-            } else {
-                rule = postcss.rule({ selector: name, source: source });
-            }
-            node.append(rule);
-            if ( typeof value === 'object' ) objectToNodes(rule, value, source);
-        } else {
-            decl = postcss.decl({
-                prop:   name,
-                value:  value.toString(),
-                source: source
-            });
-            node.append(decl);
-        }
-    }
-    return node;
-};
-
 var insertObject = function (rule, obj, processMixins) {
-    var root = objectToNodes(postcss.root(), obj, rule.source);
+    var root = jsToCss(obj);
+    root.each(function (node) {
+        node.source = rule.source;
+    });
     processMixins(root);
     rule.parent.insertBefore(rule, root);
 };

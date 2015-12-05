@@ -56,7 +56,7 @@ test('supports object mixins', t => {
                 obj: {
                     '@media screen': {
                         b: {
-                            one: 1
+                            one: '1'
                         }
                     }
                 }
@@ -180,7 +180,7 @@ test('supports nested mixins in mixin-content', t => {
 });
 
 test('supports nested mixins on object mixins', t => {
-    return run(t, '@define-mixin a { a: 1; } @mixin b;', 'a: 1;', {
+    return run(t, '@define-mixin a { a: a; } @mixin b;', 'a: a;', {
         mixins: {
             b: {
                 '@mixin a': { }
