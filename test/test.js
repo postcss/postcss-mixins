@@ -166,7 +166,25 @@ test('supports deprecated variables syntax', t => {
 });
 
 test('supports nested mixins', t => {
-    return run(t, '@define-mixin a { a: 1; } @define-mixin b { @mixin a; } ' +
-                  '@mixin b;',
+    return run(t, '@define-mixin a $a { a: $a; } ' +
+                  '@define-mixin b $b { @mixin a $b; } ' +
+                  '@mixin b 1;',
                   'a: 1;');
+});
+
+test('supports nested mixins in mixin-content', t => {
+    return run(t, '@define-mixin a { a: 1 } ' +
+                  '@define-mixin b { b { @mixin-content } } ' +
+                  '@mixin b { @mixin a }',
+                  'b {\n    a: 1\n}');
+});
+
+test('supports nested mixins on object mixins', t => {
+    return run(t, '@define-mixin a { a: 1; } @mixin b;', 'a: 1;', {
+        mixins: {
+            b: {
+                '@mixin a': { }
+            }
+        }
+    });
 });

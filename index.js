@@ -34,12 +34,13 @@ var objectToNodes = function (node, obj, source) {
     return node;
 };
 
-var insertObject = function (rule, obj) {
+var insertObject = function (rule, obj, processMixins) {
     var root = objectToNodes(postcss.root(), obj, rule.source);
+    processMixins(root);
     rule.parent.insertBefore(rule, root);
 };
 
-var insertMixin = function (result, mixins, rule, opts) {
+var insertMixin = function (result, mixins, rule, processMixins, opts) {
     var name   = rule.params.split(/\s/, 1)[0];
     var params = rule.params.slice(name.length).trim();
     if ( params.indexOf(',') === -1 ) {
@@ -82,17 +83,18 @@ var insertMixin = function (result, mixins, rule, opts) {
                 place.replaceWith(rule.nodes);
             });
         }
+        processMixins(proxy);
 
         rule.parent.insertBefore(rule, clones);
 
     } else if ( typeof mixin === 'object' ) {
-        insertObject(rule, mixin, rule.source);
+        insertObject(rule, mixin, processMixins);
 
     } else if ( typeof mixin === 'function' ) {
         var args  = [rule].concat(params);
         var nodes = mixin.apply(this, args);
         if ( typeof nodes === 'object' ) {
-            insertObject(rule, nodes, rule.source);
+            insertObject(rule, nodes, processMixins);
         }
     }
 
@@ -153,12 +155,14 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
     if ( opts.mixinsFiles ) globs = globs.concat(opts.mixinsFiles);
 
     return function (css, result) {
-        var discoverMixins = function (atrule) {
-            if ( atrule.name === 'mixin' ) {
-                insertMixin(result, mixins, atrule, opts);
-            } else if ( atrule.name === 'define-mixin' ) {
-                defineMixin(result, mixins, atrule);
-            }
+        var processMixins = function (root) {
+            root.walkAtRules(function (atrule) {
+                if ( atrule.name === 'mixin' ) {
+                    insertMixin(result, mixins, atrule, processMixins, opts);
+                } else if ( atrule.name === 'define-mixin' ) {
+                    defineMixin(result, mixins, atrule);
+                }
+            });
         };
 
         return globby(globs).then(function (files) {
@@ -170,13 +174,13 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
                     if ( ext === '.css' ) {
                         fs.readFile(relative, function (err, contents) {
                             if ( err ) return reject(err);
-                            postcss.parse(contents).walkAtRules(discoverMixins);
+                            processMixins(postcss.parse(contents));
                             resolve();
                         });
-                        return;
+                    } else {
+                        mixins[name] = { mixin: require(relative) };
+                        resolve();
                     }
-                    mixins[name] = { mixin: require(relative) };
-                    resolve();
                 });
             }));
         }).then(function () {
@@ -185,7 +189,7 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
                     mixins[i] = { mixin: opts.mixins[i] };
                 }
             }
-            css.walkAtRules(discoverMixins);
+            processMixins(css);
         });
     };
 });
