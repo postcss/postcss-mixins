@@ -164,3 +164,9 @@ test('supports deprecated variables syntax', t => {
         t.same(result.warnings().length, 2);
     });
 });
+
+test('supports nested mixins', t => {
+    return run(t, '@define-mixin a { a: 1; } @define-mixin b { @mixin a; } ' +
+                  '@mixin b;',
+                  'a: 1;');
+});
