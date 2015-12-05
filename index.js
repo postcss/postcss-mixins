@@ -53,8 +53,8 @@ var insertMixin = function (result, mixins, rule, opts) {
         params = postcss.list.comma(params);
     }
 
-    var meta   = mixins[name];
-    var mixin  = meta && meta.mixin;
+    var meta  = mixins[name];
+    var mixin = meta && meta.mixin;
 
     if ( !meta ) {
         if ( !opts.silent ) {
