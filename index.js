@@ -1,7 +1,7 @@
 var postcss = require('postcss');
+var globby  = require('globby');
 var vars    = require('postcss-simple-vars');
 var path    = require('path');
-var globby  = require('globby');
 var fs      = require('fs');
 
 var stringToAtRule = function (str, obj) {
