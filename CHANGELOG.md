@@ -1,3 +1,7 @@
+## 3.0.1
+* Fix default arguments in nested mixins.
+* Fix `@mixin-content` for declarations content.
+
 ## 3.0
 * Add nested mixins support.
 * Use `postcss-js` to convert objects into CSS in JS mixins.
