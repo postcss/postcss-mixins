@@ -5,7 +5,7 @@ var vars    = require('postcss-simple-vars');
 var path    = require('path');
 var fs      = require('fs');
 
-var insideDefine = function (rule) {
+function insideDefine(rule) {
     var parent = rule.parent;
     if ( !parent ) {
         return false;
@@ -14,18 +14,18 @@ var insideDefine = function (rule) {
     } else {
         return insideDefine(parent);
     }
-};
+}
 
-var insertObject = function (rule, obj, processMixins) {
+function insertObject(rule, obj, processMixins) {
     var root = jsToCss(obj);
     root.each(function (node) {
         node.source = rule.source;
     });
     processMixins(root);
     rule.parent.insertBefore(rule, root);
-};
+}
 
-var insertMixin = function (result, mixins, rule, processMixins, opts) {
+function insertMixin(result, mixins, rule, processMixins, opts) {
     var name   = rule.params.split(/\s/, 1)[0];
     var params = rule.params.slice(name.length).trim();
     if ( params.indexOf(',') === -1 ) {
@@ -83,9 +83,9 @@ var insertMixin = function (result, mixins, rule, processMixins, opts) {
     }
 
     if ( rule.parent ) rule.remove();
-};
+}
 
-var defineMixin = function (result, mixins, rule) {
+function defineMixin(result, mixins, rule) {
     var name  = rule.params.split(/\s/, 1)[0];
     var other = rule.params.slice(name.length).trim();
 
@@ -118,7 +118,7 @@ var defineMixin = function (result, mixins, rule) {
 
     mixins[name] = { mixin: rule, args: args, content: content };
     rule.remove();
-};
+}
 
 module.exports = postcss.plugin('postcss-mixins', function (opts) {
     if ( typeof opts === 'undefined' ) opts = { };
