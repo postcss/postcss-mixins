@@ -43,23 +43,22 @@ var insertMixin = function (result, mixins, rule, processMixins, opts) {
             values[meta.args[i][0]] = params[i] || meta.args[i][1];
         }
 
-        var clones = [];
+        var proxy = postcss.root();
         for ( i = 0; i < mixin.nodes.length; i++ ) {
-            clones.push( mixin.nodes[i].clone() );
+            proxy.append( mixin.nodes[i].clone() );
         }
 
-        var proxy = postcss.rule({ nodes: clones });
         if ( meta.args.length ) {
             vars({ only: values })(proxy);
         }
         if ( meta.content ) {
-            proxy.walkAtRules('mixin-content', function (place) {
-                place.replaceWith(rule.nodes);
+            proxy.walkAtRules('mixin-content', function (content) {
+                content.replaceWith(rule.nodes);
             });
         }
         processMixins(proxy);
 
-        rule.parent.insertBefore(rule, clones);
+        rule.parent.insertBefore(rule, proxy);
 
     } else if ( typeof mixin === 'object' ) {
         insertObject(rule, mixin, processMixins);

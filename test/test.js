@@ -87,6 +87,12 @@ test('supports mixins with content', t => {
                   '@media {\n    a {}\n}');
 });
 
+test('supports mixins with declarations content', t => {
+    return run(t, '@define-mixin m { a: 1; @mixin-content; } ' +
+                  '.m { @mixin m { b: 2 } }',
+                  '.m { a: 1; b: 2 }');
+});
+
 test('uses variables', t => {
     return run(t, '@define-mixin m $a, $b: b, $c: c { v: $a $b $c; }' +
                   '@mixin m 1, 2;',
