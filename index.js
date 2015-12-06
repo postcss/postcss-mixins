@@ -5,6 +5,17 @@ var vars    = require('postcss-simple-vars');
 var path    = require('path');
 var fs      = require('fs');
 
+var insideDefine = function (rule) {
+    var parent = rule.parent;
+    if ( !parent ) {
+        return false;
+    } else if ( parent.name === 'define-mixin' ) {
+        return true;
+    } else {
+        return insideDefine(parent);
+    }
+};
+
 var insertObject = function (rule, obj, processMixins) {
     var root = jsToCss(obj);
     root.each(function (node) {
@@ -129,11 +140,13 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
 
     return function (css, result) {
         var processMixins = function (root) {
-            root.walkAtRules(function (atrule) {
-                if ( atrule.name === 'mixin' ) {
-                    insertMixin(result, mixins, atrule, processMixins, opts);
-                } else if ( atrule.name === 'define-mixin' ) {
-                    defineMixin(result, mixins, atrule);
+            root.walkAtRules(function (i) {
+                if ( i.name === 'mixin' ) {
+                    if ( !insideDefine(i) ) {
+                        insertMixin(result, mixins, i, processMixins, opts);
+                    }
+                } else if ( i.name === 'define-mixin' ) {
+                    defineMixin(result, mixins, i);
                 }
             });
         };

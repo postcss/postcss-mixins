@@ -194,3 +194,10 @@ test('supports nested mixins on object mixins', t => {
         }
     });
 });
+
+test('supports default arguments in nested mixins', t => {
+    return run(t, '@define-mixin a $a: 1 { a: $a } ' +
+                  '@define-mixin b $b { @mixin a $b } ' +
+                  '@mixin b;',
+                  'a: 1;');
+});
