@@ -1,3 +1,6 @@
+## 3.0.2
+* Fix `@mixin-content` usage with empty body.
+
 ## 3.0.1
 * Fix default arguments in nested mixins.
 * Fix `@mixin-content` for declarations content.
