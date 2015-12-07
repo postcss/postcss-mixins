@@ -64,7 +64,11 @@ function insertMixin(result, mixins, rule, processMixins, opts) {
         }
         if ( meta.content ) {
             proxy.walkAtRules('mixin-content', function (content) {
-                content.replaceWith(rule.nodes);
+                if ( rule.nodes && rule.nodes.length > 0 ) {
+                    content.replaceWith(rule.nodes);
+                } else {
+                    content.remove();
+                }
             });
         }
         processMixins(proxy);

@@ -93,6 +93,12 @@ test('supports mixins with declarations content', t => {
                   '.m { a: 1; b: 2 }');
 });
 
+test('supports mixins with empty content', t => {
+    return run(t, '@define-mixin m { a: 1; @mixin-content; } ' +
+                  '.m { @mixin m; }',
+                  '.m { a: 1; }');
+});
+
 test('uses variables', t => {
     return run(t, '@define-mixin m $a, $b: b, $c: c { v: $a $b $c; }' +
                   '@mixin m 1, 2;',
