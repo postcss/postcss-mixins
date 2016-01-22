@@ -1,3 +1,6 @@
+## 4.0.0
+* Remove space-separated parameters. They were depreacted in 0.3.
+
 ## 3.0.2
 * Fix `@mixin-content` usage with empty body.
 
