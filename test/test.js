@@ -168,15 +168,6 @@ test('coverts mixins values', t => {
     });
 });
 
-test('supports deprecated variables syntax', t => {
-    return postcss(mixins).process(
-        '@define-mixin m $a $b $c { v: $a $b $c; } @mixin m 1 2 3;'
-    ).then(result => {
-        t.same(result.css, 'v: 1 2 3;');
-        t.same(result.warnings().length, 2);
-    });
-});
-
 test('supports nested mixins', t => {
     return run(t, '@define-mixin a $a { a: $a; } ' +
                   '@define-mixin b $b { @mixin a $b; } ' +

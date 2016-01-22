@@ -27,17 +27,8 @@ function insertObject(rule, obj, processMixins) {
 
 function insertMixin(result, mixins, rule, processMixins, opts) {
     var name   = rule.params.split(/\s/, 1)[0];
-    var params = rule.params.slice(name.length).trim();
-    if ( params.indexOf(',') === -1 ) {
-        params = postcss.list.space(params);
-        if ( params.length > 1 ) {
-            result.warn('Space argument separation is depreacted and ' +
-                        'will be removed in next version. Use comma.',
-                        { node: rule });
-        }
-    } else {
-        params = postcss.list.comma(params);
-    }
+    var rest   = rule.params.slice(name.length).trim();
+    var params = postcss.list.comma(rest);
 
     var meta  = mixins[name];
     var mixin = meta && meta.mixin;
@@ -95,23 +86,11 @@ function defineMixin(result, mixins, rule) {
 
     var args = [];
     if ( other.length ) {
-        if ( other.indexOf(',') === -1 && other.indexOf(':') === -1 ) {
-            args = other.split(/\s/).map(function (str) {
-                return [str.slice(1), ''];
-            });
-            if ( args.length > 1 ) {
-                result.warn('Space argument separation is depreacted and ' +
-                            'will be removed in next version. Use comma.',
-                            { node: rule });
-            }
-
-        } else {
-            args = postcss.list.comma(other).map(function (str) {
-                var arg      = str.split(':', 1)[0];
-                var defaults = str.slice(arg.length + 1);
-                return [arg.slice(1).trim(), defaults.trim()];
-            });
-        }
+        args = postcss.list.comma(other).map(function (str) {
+            var arg      = str.split(':', 1)[0];
+            var defaults = str.slice(arg.length + 1);
+            return [arg.slice(1).trim(), defaults.trim()];
+        });
     }
 
     var content = false;
