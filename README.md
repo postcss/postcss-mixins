@@ -110,7 +110,7 @@ First argument will be `@mixin` node, that called this mixin.
 You can insert your declarations or rule before or after this node.
 Other arguments will be taken from at-rule parameters.
 
-See [PostCSS API] about nodes API.
+See [PostCSS API](https://github.com/postcss/postcss/blob/master/docs/api.md) about nodes API.
 
 ```js
 require('postcss-mixins')({
