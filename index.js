@@ -146,7 +146,10 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
                 return new Promise(function (resolve, reject) {
                     if ( ext.toLowerCase() === '.css' ) {
                         fs.readFile(relative, function (err, contents) {
-                            if ( err ) return reject(err);
+                            if ( err ) {
+                                reject(err);
+                                return;
+                            }
                             postcss.parse(contents)
                                 .walkAtRules('define-mixin', function (atrule) {
                                     defineMixin(result, mixins, atrule);
