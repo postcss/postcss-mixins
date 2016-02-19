@@ -1,3 +1,6 @@
+## 4.0.1
+* Fix Windows support for `mixinsFiles` and `mixinsDir` (by Hugo Agbonon).
+
 ## 4.0.0
 * Remove space-separated parameters. They were depreacted in 0.3.
 
