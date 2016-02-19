@@ -4,6 +4,7 @@ var globby  = require('globby');
 var vars    = require('postcss-simple-vars');
 var path    = require('path');
 var fs      = require('fs');
+var isWindows = require('os').platform().indexOf('win32') !== -1;
 
 function insideDefine(rule) {
     var parent = rule.parent;
@@ -109,6 +110,7 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
     var cwd    = process.cwd();
     var globs  = [];
     var mixins = { };
+    var noCaseSearch = !isWindows;
 
     if ( opts.mixinsDir ) {
         if ( !Array.isArray(opts.mixinsDir) ) {
@@ -134,7 +136,9 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
             });
         };
 
-        return globby(globs, { nocase: true }).then(function (files) {
+        // Windows bug with {nocase: true} due to node-glob issue
+        // https://github.com/isaacs/node-glob/issues/123
+        return globby(globs, { nocase: noCaseSearch }).then(function (files) {
             return Promise.all(files.map(function (file) {
                 var ext      = path.extname(file);
                 var name     = path.basename(file, ext);
