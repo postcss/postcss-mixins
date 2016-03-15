@@ -178,6 +178,17 @@ require('postcss-mixins')({
 
 [PostCSS API]: https://github.com/postcss/postcss/blob/master/docs/api.md
 
+**Note**: When you need to pass arguments to a mixin, ensure you pass 'rule' as your first argument. For example:
+
+````js
+Spinner: function (rule, $backgroundColor, $highlightColor)  {
+    return {
+        'border': '2px solid ' + $backgroundColor,
+        'border-left-color': $highlightColor
+    };
+}
+````
+
 ## Options
 
 Call plugin function to set options:
