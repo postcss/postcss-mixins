@@ -1,3 +1,6 @@
+## 4.0.2
+* Fix default argument values in function mixins.
+
 ## 4.0.1
 * Fix Windows support for `mixinsFiles` and `mixinsDir` (by Hugo Agbonon).
 
