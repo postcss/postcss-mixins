@@ -6,14 +6,14 @@ import mixins from '../';
 
 function run(t, input, output, opts) {
     return postcss(mixins(opts)).process(input).then(result => {
-        t.same(result.css, output);
-        t.same(result.warnings().length, 0);
+        t.deepEqual(result.css, output);
+        t.deepEqual(result.warnings().length, 0);
     });
 }
 
 test('throws error on unknown mixin', t => {
     return postcss(mixins).process('@mixin A').catch(err => {
-        t.same(err.reason, 'Undefined mixin A');
+        t.deepEqual(err.reason, 'Undefined mixin A');
     });
 });
 
@@ -164,7 +164,7 @@ test('coverts mixins values', t => {
         }
     }));
     return proccessor.process('a{ @mixin empty; }').then(result => {
-        t.same(typeof result.root.first.first.value, 'string');
+        t.deepEqual(typeof result.root.first.first.value, 'string');
     });
 });
 
