@@ -49,6 +49,17 @@ test('converts object from function to nodes', t => {
     });
 });
 
+test('passes undefined on missed parameters', t => {
+    return run(t, 'a { @mixin test; @mixin test  ; }', 'a { }', {
+        mixins: {
+            test: (rule, param1) => {
+                t.deepEqual(typeof param1, 'undefined')
+                return { };
+            }
+        }
+    });
+});
+
 test('supports object mixins', t => {
     return run(t, '@mixin obj;',
         '@media screen {\n    b {\n        one: 1\n    }\n}', {
