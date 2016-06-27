@@ -11,10 +11,7 @@
   ],
   "author": "Andrey Sitnik <andrey@sitnik.ru>",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url":  "https://github.com/postcss/postcss-mixins.git"
-  },
+  "repository": "postcss/postcss-mixins",
   "dependencies": {
     "postcss-simple-vars": "^2.0.0",
     "postcss-js":          "^0.1.3",
