@@ -1,3 +1,7 @@
+## 5.0
+* Use `postcss-simple-vars` 3.0 with special syntax for comment variables
+  and nested variables support.
+
 ## 4.0.2
 * Fix default argument values in function mixins.
 
