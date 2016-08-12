@@ -1,3 +1,6 @@
+## 5.0.1
+* Use globby 6 and PostCSS 5.1.
+
 ## 5.0
 * Use `postcss-simple-vars` 3.0 with special syntax for comment variables
   and nested variables support.
