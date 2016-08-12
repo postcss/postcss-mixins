@@ -144,7 +144,7 @@ You can also return an object if you don’t want to create each node manually:
 ```js
 require('postcss-mixins')({
     mixins: {
-        hidpi: function (path) {
+        image: function (mixin, path) {
             return {
                 '&': {
                     background: 'url(' + path + ')'
@@ -155,6 +155,22 @@ require('postcss-mixins')({
                     }
                 }
             }
+        }
+    }
+}
+```
+
+Mixin body will be in `mixin.nodes`:
+
+```
+var postcss = require('postcss');
+
+require('postcss-mixins')({
+    mixins: {
+        hover: function (mixin) {
+            let rule = postcss.rule({ selector: '&:hover', '&.hover' });
+            rule.append(mixin.nodes);
+            mixin.replaceWith(rule);
         }
     }
 }
@@ -177,18 +193,6 @@ require('postcss-mixins')({
 ```
 
 [PostCSS API]: https://github.com/postcss/postcss/blob/master/docs/api.md
-
-**Note**: When you need to pass arguments to a mixin, ensure you pass `rule`
-as your first argument. For example:
-
-````js
-spinner: function (rule, background, highlight)  {
-    return {
-        border: '2px solid ' + background,
-        borderLeftColor: highlight
-    };
-}
-````
 
 ## Options
 
