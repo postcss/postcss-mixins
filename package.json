@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "eslint-config-postcss": "^2.0.2",
-    "eslint":                "^3.3.0",
+    "eslint":                "^3.4.0",
     "ava":                   "^0.16.0"
   },
   "scripts": {
