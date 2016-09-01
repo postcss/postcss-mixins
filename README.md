@@ -48,9 +48,11 @@ and [postcss-nested].
 }
 ```
 
-See also [postcss-define-property] for some simple cases.
+[postcss-utilities] collection is better for `clearfix` and other popular hacks.
+For simple cases you can use [postcss-define-property].
 
 [postcss-define-property]: https://github.com/daleeidd/postcss-define-property
+[postcss-utilities]:       https://github.com/ismamz/postcss-utilities
 [postcss-simple-vars]:     https://github.com/postcss/postcss-simple-vars
 [postcss-nested]:          https://github.com/postcss/postcss-nested
 [PostCSS]:                 https://github.com/postcss/postcss
