@@ -1,5 +1,6 @@
 var jsToCss = require('postcss-js/parser');
 var postcss = require('postcss');
+var sugarss = require('sugarss');
 var globby  = require('globby');
 var vars    = require('postcss-simple-vars');
 var path    = require('path');
@@ -122,7 +123,7 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
             opts.mixinsDir = [opts.mixinsDir];
         }
         globs = opts.mixinsDir.map(function (dir) {
-            return path.join(dir, '*.{js,json,css}');
+            return path.join(dir, '*.{js,json,css,sss}');
         });
     }
 
@@ -145,20 +146,25 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
         // https://github.com/isaacs/node-glob/issues/123
         return globby(globs, { nocase: !isWindows }).then(function (files) {
             return Promise.all(files.map(function (file) {
-                var ext      = path.extname(file);
-                var name     = path.basename(file, ext);
+                var ext      = path.extname(file).toLowerCase();
+                var name     = path.basename(file, path.extname(file));
                 var relative = path.join(cwd, path.relative(cwd, file));
                 return new Promise(function (resolve, reject) {
-                    if ( ext.toLowerCase() === '.css' ) {
+                    if ( ext === '.css' || ext === '.sss' ) {
                         fs.readFile(relative, function (err, contents) {
                             if ( err ) {
                                 reject(err);
                                 return;
                             }
-                            postcss.parse(contents)
-                                .walkAtRules('define-mixin', function (atrule) {
-                                    defineMixin(result, mixins, atrule);
-                                });
+                            var root;
+                            if ( ext === '.sss' ) {
+                                root = sugarss.parse(contents);
+                            } else {
+                                root = postcss.parse(contents);
+                            }
+                            root.walkAtRules('define-mixin', function (atrule) {
+                                defineMixin(result, mixins, atrule);
+                            });
                             resolve();
                         });
                     } else {

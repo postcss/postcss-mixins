@@ -53,7 +53,7 @@ test('passes undefined on missed parameters', t => {
     return run(t, 'a { @mixin test; @mixin test  ; }', 'a { }', {
         mixins: {
             test: (rule, param1) => {
-                t.deepEqual(typeof param1, 'undefined')
+                t.deepEqual(typeof param1, 'undefined');
                 return { };
             }
         }
@@ -118,8 +118,8 @@ test('uses variables', t => {
 
 test('loads mixins from dir', t => {
     return run(t,
-        'a { @mixin a 1; @mixin b; @mixin d; }',
-        'a { a: 1; b: 2; d: 4; }',
+        'a { @mixin a 1; @mixin b; @mixin c; @mixin d; }',
+        'a { a: 1; b: 2; c: 3; d: 4; }',
         {
             mixinsDir: path.join(__dirname, 'mixins')
         }
@@ -128,8 +128,8 @@ test('loads mixins from dir', t => {
 
 test('loads mixins from relative dir', t => {
     return run(t,
-        'a { @mixin a 1; @mixin b; @mixin d; }',
-        'a { a: 1; b: 2; d: 4; }',
+        'a { @mixin a 1; @mixin b; @mixin c; @mixin d; }',
+        'a { a: 1; b: 2; c: 3; d: 4; }',
         {
             mixinsDir: 'mixins/'
         }
