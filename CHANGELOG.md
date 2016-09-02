@@ -1,3 +1,6 @@
+## 5.2
+* Add `.pcss` extension support in `mixinsDir`.
+
 ## 5.1
 * Add SugarSS support in `mixinsDir`.
 
