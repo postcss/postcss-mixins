@@ -234,12 +234,19 @@ module.exports = {
     }
 }
 
-// mixins/size.css
+// mixins/size.pcss
 
 @define-mixin size $size {
     width: $size;
     height: $size;
 }
+
+// mixins/circle.sss
+
+@define-mixin circle $size
+  border-radius: 50%
+  width: $size
+  height: $size
 ```
 
 ### `mixinsFiles`

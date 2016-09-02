@@ -118,8 +118,8 @@ test('uses variables', t => {
 
 test('loads mixins from dir', t => {
     return run(t,
-        'a { @mixin a 1; @mixin b; @mixin c; @mixin d; }',
-        'a { a: 1; b: 2; c: 3; d: 4; }',
+        'a { @mixin a 1; @mixin b; @mixin c; @mixin d; @mixin e; }',
+        'a { a: 1; b: 2; c: 3; d: 4; e: 5; }',
         {
             mixinsDir: path.join(__dirname, 'mixins')
         }
@@ -128,8 +128,8 @@ test('loads mixins from dir', t => {
 
 test('loads mixins from relative dir', t => {
     return run(t,
-        'a { @mixin a 1; @mixin b; @mixin c; @mixin d; }',
-        'a { a: 1; b: 2; c: 3; d: 4; }',
+        'a { @mixin a 1; @mixin b; @mixin c; @mixin d; @mixin e; }',
+        'a { a: 1; b: 2; c: 3; d: 4; e: 5; }',
         {
             mixinsDir: 'mixins/'
         }

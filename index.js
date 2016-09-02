@@ -123,7 +123,7 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
             opts.mixinsDir = [opts.mixinsDir];
         }
         globs = opts.mixinsDir.map(function (dir) {
-            return path.join(dir, '*.{js,json,css,sss}');
+            return path.join(dir, '*.{js,json,css,sss,pcss}');
         });
     }
 
@@ -150,7 +150,7 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
                 var name     = path.basename(file, path.extname(file));
                 var relative = path.join(cwd, path.relative(cwd, file));
                 return new Promise(function (resolve, reject) {
-                    if ( ext === '.css' || ext === '.sss' ) {
+                    if ( ext === '.css' || ext === '.pcss' || ext === '.sss' ) {
                         fs.readFile(relative, function (err, contents) {
                             if ( err ) {
                                 reject(err);
