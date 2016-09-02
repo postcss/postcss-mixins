@@ -1,3 +1,6 @@
+## 5.1
+* Add SugarSS support in `mixinsDir`.
+
 ## 5.0.1
 * Use globby 6 and PostCSS 5.1.
 
