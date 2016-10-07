@@ -142,6 +142,20 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
             });
         };
 
+        var process = function () {
+            if ( typeof opts.mixins === 'object' ) {
+                for ( var i in opts.mixins ) {
+                    mixins[i] = { mixin: opts.mixins[i] };
+                }
+            }
+            processMixins(css);
+        };
+
+        if ( globs.length === 0 ) {
+            process();
+            return;
+        }
+
         // Windows bug with { nocase: true } due to node-glob issue
         // https://github.com/isaacs/node-glob/issues/123
         return globby(globs, { nocase: !isWindows }).then(function (files) {
@@ -173,13 +187,6 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
                     }
                 });
             }));
-        }).then(function () {
-            if ( typeof opts.mixins === 'object' ) {
-                for ( var i in opts.mixins ) {
-                    mixins[i] = { mixin: opts.mixins[i] };
-                }
-            }
-            processMixins(css);
-        });
+        }).then(process);
     };
 });

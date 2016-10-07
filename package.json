@@ -28,6 +28,9 @@
     "test": "ava test/*.js && eslint *.js test/**/*.js"
   },
   "eslintConfig": {
-    "extends": "eslint-config-postcss/es5"
+    "extends": "eslint-config-postcss/es5",
+    "rules": {
+      "consistent-return": "off"
+    }
   }
 }

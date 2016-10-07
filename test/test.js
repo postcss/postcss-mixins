@@ -209,3 +209,9 @@ test('supports default arguments in nested mixins', t => {
                   '@mixin b;',
                   'a: 1;');
 });
+
+test('works in sync mode on no option', t => {
+    let input = '@define-mixin a { a: 1 }; @mixin a';
+    let output = 'a: 1';
+    t.deepEqual(postcss(mixins()).process(input).css, output);
+});
