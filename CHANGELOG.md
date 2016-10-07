@@ -1,3 +1,7 @@
+## 5.3
+* Do not use asynchronous API if it is unnecessary.
+* Use SugarSS 0.2.
+
 ## 5.2
 * Add `.pcss` extension support in `mixinsDir`.
 
