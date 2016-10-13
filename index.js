@@ -7,11 +7,15 @@ var path    = require('path');
 var fs      = require('fs');
 var isWindows = require('os').platform().indexOf('win32') !== -1;
 
+var mixinRule;
+var defineMixinRule;
+var mixinContentRule;
+
 function insideDefine(rule) {
     var parent = rule.parent;
     if ( !parent ) {
         return false;
-    } else if ( parent.name === 'define-mixin' ) {
+    } else if ( parent.name === defineMixinRule ) {
         return true;
     } else {
         return insideDefine(parent);
@@ -46,7 +50,7 @@ function insertMixin(result, mixins, rule, processMixins, opts) {
             throw rule.error('Undefined mixin ' + name);
         }
 
-    } else if ( mixin.name === 'define-mixin' ) {
+    } else if ( mixin.name === defineMixinRule ) {
         var i;
         var values = { };
         for ( i = 0; i < meta.args.length; i++ ) {
@@ -62,7 +66,7 @@ function insertMixin(result, mixins, rule, processMixins, opts) {
             vars({ only: values })(proxy);
         }
         if ( meta.content ) {
-            proxy.walkAtRules('mixin-content', function (content) {
+            proxy.walkAtRules(mixinContentRule, function (content) {
                 if ( rule.nodes && rule.nodes.length > 0 ) {
                     content.replaceWith(rule.nodes);
                 } else {
@@ -102,7 +106,7 @@ function defineMixin(result, mixins, rule) {
     }
 
     var content = false;
-    rule.walkAtRules('mixin-content', function () {
+    rule.walkAtRules(mixinContentRule, function () {
         content = true;
         return false;
     });
@@ -118,6 +122,17 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
     var globs  = [];
     var mixins = { };
 
+    mixinRule = 'mixin';
+    defineMixinRule = 'define-mixin';
+    mixinContentRule = 'mixin-content';
+
+    if ( opts.rules ) {
+        mixinRule = opts.rules.mixin || mixinRule;
+        defineMixinRule = opts.rules.defineMixin || defineMixinRule;
+        mixinContentRule = opts.rules.mixinContent || mixinContentRule;
+    }
+
+
     if ( opts.mixinsDir ) {
         if ( !Array.isArray(opts.mixinsDir) ) {
             opts.mixinsDir = [opts.mixinsDir];
@@ -132,11 +147,11 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
     return function (css, result) {
         var processMixins = function (root) {
             root.walkAtRules(function (i) {
-                if ( i.name === 'mixin' ) {
+                if ( i.name === mixinRule ) {
                     if ( !insideDefine(i) ) {
                         insertMixin(result, mixins, i, processMixins, opts);
                     }
-                } else if ( i.name === 'define-mixin' ) {
+                } else if ( i.name === defineMixinRule ) {
                     defineMixin(result, mixins, i);
                 }
             });
@@ -176,7 +191,8 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
                             } else {
                                 root = postcss.parse(contents);
                             }
-                            root.walkAtRules('define-mixin', function (atrule) {
+                            root.walkAtRules(defineMixinRule,
+                            function (atrule) {
                                 defineMixin(result, mixins, atrule);
                             });
                             resolve();

@@ -215,3 +215,14 @@ test('works in sync mode on no option', t => {
     let output = 'a: 1';
     t.deepEqual(postcss(mixins()).process(input).css, output);
 });
+
+test('supports renaming mixin rules through options', t => {
+    let input = '@set a { color: blue; } @use a;';
+    let output = 'color: blue;';
+    t.deepEqual(postcss(mixins({
+        rules: {
+            mixin: 'use',
+            defineMixin: 'set'
+        }
+    })).process(input).css, output);
+});
