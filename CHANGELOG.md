@@ -1,3 +1,6 @@
+## 5.4
+* Add `add-mixin` alias for `@mixin` for Sass migration process.
+
 ## 5.3
 * Do not use asynchronous API if it is unnecessary.
 * Use SugarSS 0.2.
