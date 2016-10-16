@@ -215,3 +215,8 @@ test('works in sync mode on no option', t => {
     let output = 'a: 1';
     t.deepEqual(postcss(mixins()).process(input).css, output);
 });
+
+
+test('cans remove unknown mixin on request', t => {
+    return run(t, '@define-mixin a { a: 1 } @add-mixin a', 'a: 1');
+});

@@ -132,7 +132,7 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
     return function (css, result) {
         var processMixins = function (root) {
             root.walkAtRules(function (i) {
-                if ( i.name === 'mixin' ) {
+                if ( i.name === 'mixin' || i.name === 'add-mixin' ) {
                     if ( !insideDefine(i) ) {
                         insertMixin(result, mixins, i, processMixins, opts);
                     }

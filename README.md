@@ -69,6 +69,27 @@ See [PostCSS] docs for examples for your environment.
 
 ## Mixins
 
+### Migration from Sass
+
+If you need to use Sass and PostCSS mixins together
+(for example, while migration), you could use `@add-mixin`,
+instead of `@mixin`. Just pust PostCSS after Sass.
+
+```sass
+// Legacy SCSS
+@mixin old {
+    …
+}
+@include old;
+
+// New code
+@define-mixin new {
+    …
+}
+@add-mixin new;
+```
+
+
 ### CSS Mixin
 
 Simple template defined directly in CSS to prevent repeating yourself.
