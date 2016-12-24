@@ -1,3 +1,6 @@
+## 5.4.1
+* Fix support nested function mixins (by Lam Tran).
+
 ## 5.4
 * Add `add-mixin` alias for `@mixin` for Sass migration process.
 
