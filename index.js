@@ -80,7 +80,7 @@ function insertMixin(result, mixins, rule, processMixins, opts) {
     } else if ( typeof mixin === 'function' ) {
         var args  = [rule].concat(params);
         rule.walkAtRules(function (atRule) {
-          insertMixin(result, mixins, atRule, processMixins, opts)
+            insertMixin(result, mixins, atRule, processMixins, opts);
         });
         var nodes = mixin.apply(this, args);
         if ( typeof nodes === 'object' ) {

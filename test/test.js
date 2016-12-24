@@ -12,22 +12,25 @@ function run(t, input, output, opts) {
 }
 
 test('supports nested function mixins', t => {
-  return run(t, 'a { color: black; @mixin parent { @mixin child; } }', 'a { color: black; .parent { color: white } }', {
-      mixins: {
-          parent: (mixin) => {
-            let rule = postcss.rule({ selector: `.parent` });
-            if (mixin.nodes) {
-              rule.append(mixin.nodes);
+    return run(t,
+        'a { color: black; @mixin parent { @mixin child; } }',
+        'a { color: black; .parent { color: white } }',
+        {
+            mixins: {
+                parent: (mixin) => {
+                    let rule = postcss.rule({ selector: '.parent' });
+                    if ( mixin.nodes ) {
+                        rule.append(mixin.nodes);
+                    }
+                    mixin.replaceWith(rule);
+                },
+                child: () => {
+                    return {
+                        color: 'white'
+                    };
+                }
             }
-            mixin.replaceWith(rule);
-          },
-          child: (mixin) => {
-            return {
-              color: 'white'
-            }
-          }
-      }
-  });
+        });
 });
 
 test('throws error on unknown mixin', t => {
