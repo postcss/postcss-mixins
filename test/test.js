@@ -148,16 +148,6 @@ test('loads mixins from dir', t => {
     );
 });
 
-test('loads mixins from relative dir', t => {
-    return run(t,
-        'a { @mixin a 1; @mixin b; @mixin c; @mixin d; @mixin e; }',
-        'a { a: 1; b: 2; c: 3; d: 4; e: 5; }',
-        {
-            mixinsDir: 'mixins/'
-        }
-    );
-});
-
 test('loads mixins from dirs', t => {
     return run(t, 'a { @mixin a 1; @mixin c; }', 'a { a: 1; c: 3; }', {
         mixinsDir: [
@@ -167,9 +157,20 @@ test('loads mixins from dirs', t => {
     });
 });
 
+
+test('loads mixins from relative dir', t => {
+    return run(t,
+        'a { @mixin a 1; @mixin b; @mixin c; @mixin d; @mixin e; }',
+        'a { a: 1; b: 2; c: 3; d: 4; e: 5; }',
+        {
+            mixinsDir: 'test/mixins/'
+        }
+    );
+});
+
 test('loads mixins from relative dirs', t => {
     return run(t, 'a { @mixin a 1; @mixin c; }', 'a { a: 1; c: 3; }', {
-        mixinsDir: ['mixins', 'other']
+        mixinsDir: ['test/mixins', 'test/other']
     });
 });
 
