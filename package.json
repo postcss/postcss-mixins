@@ -13,16 +13,16 @@
   "license": "MIT",
   "repository": "postcss/postcss-mixins",
   "dependencies": {
+    "globby": "^6.1.0",
+    "postcss": "^5.2.6",
+    "postcss-js": "^0.2.0",
     "postcss-simple-vars": "^3.0.0",
-    "postcss-js":          "^0.2.0",
-    "postcss":             "^5.2.6",
-    "sugarss":             "^0.2.0",
-    "globby":              "^6.1.0"
+    "sugarss": "^0.2.0"
   },
   "devDependencies": {
-    "eslint-config-postcss": "^2.0.2",
-    "eslint":                "^3.12.2",
-    "ava":                   "^0.17.0"
+    "ava": "^0.17.0",
+    "eslint": "^3.12.2",
+    "eslint-config-postcss": "^2.0.2"
   },
   "scripts": {
     "test": "ava test/*.js && eslint *.js test/**/*.js"
