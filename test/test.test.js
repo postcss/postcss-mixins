@@ -3,35 +3,13 @@ var path    = require('path');
 
 var mixins = require('../');
 
-function run(input, output, opts = { }) {
+function run(input, output, opts) {
     return postcss([ mixins(opts) ]).process(input)
         .then( result => {
             expect(result.css).toEqual(output);
             expect(result.warnings().length).toBe(0);
         });
 }
-
-it('supports nested function mixins', () => {
-    return run(
-        'a { color: black; @mixin parent { @mixin child; } }',
-        'a { color: black; .parent { color: white } }',
-        {
-            mixins: {
-                parent: (mixin) => {
-                    var rule = postcss.rule({ selector: '.parent' });
-                    if ( mixin.nodes ) {
-                        rule.append(mixin.nodes);
-                    }
-                    mixin.replaceWith(rule);
-                },
-                child: () => {
-                    return {
-                        color: 'white'
-                    };
-                }
-            }
-        });
-});
 
 it('throws error on unknown mixin', () => {
     return postcss(mixins).process('@mixin A').catch(err => {
@@ -92,6 +70,28 @@ it('supports object mixins', () => {
                             one: '1'
                         }
                     }
+                }
+            }
+        });
+});
+
+it('supports nested function mixins', () => {
+    return run(
+        'a { color: black; @mixin parent { @mixin child; } }',
+        'a { color: black; .parent { color: white } }',
+        {
+            mixins: {
+                parent: mixin => {
+                    var rule = postcss.rule({ selector: '.parent' });
+                    if ( mixin.nodes ) {
+                        rule.append(mixin.nodes);
+                    }
+                    mixin.replaceWith(rule);
+                },
+                child: () => {
+                    return {
+                        color: 'white'
+                    };
                 }
             }
         });
