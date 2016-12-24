@@ -169,6 +169,7 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
                 return new Promise(function (resolve, reject) {
                     if ( ext === '.css' || ext === '.pcss' || ext === '.sss' ) {
                         fs.readFile(relative, function (err, contents) {
+                            /* istanbul ignore if */
                             if ( err ) {
                                 reject(err);
                                 return;

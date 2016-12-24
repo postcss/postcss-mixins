@@ -28,7 +28,7 @@
   },
   "scripts": {
     "lint-staged": "lint-staged",
-    "test": "jest && eslint *.js test/**/*.js"
+    "test": "jest --coverage && eslint *.js test/**/*.js"
   },
   "eslintConfig": {
     "extends": "eslint-config-postcss/es5",
@@ -37,6 +37,13 @@
     },
     "env": {
       "jest": true
+    }
+  },
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "statements": 100
+      }
     }
   },
   "lint-staged": {
