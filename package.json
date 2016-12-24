@@ -14,26 +14,29 @@
   "repository": "postcss/postcss-mixins",
   "dependencies": {
     "globby": "^6.1.0",
-    "lint-staged": "^3.2.4",
     "postcss": "^5.2.6",
     "postcss-js": "^0.2.0",
     "postcss-simple-vars": "^3.0.0",
-    "pre-commit": "^1.2.2",
     "sugarss": "^0.2.0"
   },
   "devDependencies": {
-    "ava": "^0.17.0",
     "eslint": "^3.12.2",
-    "eslint-config-postcss": "^2.0.2"
+    "eslint-config-postcss": "^2.0.2",
+    "jest": "^18.0.0",
+    "lint-staged": "^3.2.4",
+    "pre-commit": "^1.2.2"
   },
   "scripts": {
     "lint-staged": "lint-staged",
-    "test": "ava test/*.js && eslint *.js test/**/*.js"
+    "test": "jest && eslint *.js test/**/*.js"
   },
   "eslintConfig": {
     "extends": "eslint-config-postcss/es5",
     "rules": {
       "consistent-return": "off"
+    },
+    "env": {
+      "jest": true
     }
   },
   "lint-staged": {
