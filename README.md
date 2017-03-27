@@ -73,7 +73,7 @@ See [PostCSS] docs for examples for your environment.
 
 If you need to use Sass and PostCSS mixins together
 (for example, while migration), you could use `@add-mixin`,
-instead of `@mixin`. Just pust PostCSS after Sass.
+instead of `@mixin`. Just put PostCSS after Sass.
 
 ```sass
 // Legacy SCSS
