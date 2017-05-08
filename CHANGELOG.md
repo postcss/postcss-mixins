@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0
+* Use PostCSS 6.0.
+
 ## 5.4.1
 * Fix support nested function mixins (by Lam Tran).
 
