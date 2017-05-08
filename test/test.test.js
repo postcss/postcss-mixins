@@ -99,31 +99,31 @@ it('supports nested function mixins', () => {
 
 it('supports CSS mixins', () => {
     return run('@define-mixin black { color: black; } a { @mixin black; }',
-                  'a { color: black; }');
+               'a { color: black; }');
 });
 
 it('uses variable', () => {
     return run('@define-mixin color $color { color: $color $other; } ' +
-                  'a { @mixin color black; }',
-                  'a { color: black $other; }');
+               'a { @mixin color black; }',
+               'a { color: black $other; }');
 });
 
 it('supports default value', () => {
     return run('@define-mixin c $color: black { color: $color; } ' +
-                  'a { @mixin c; }',
-                  'a { color: black; }');
+               'a { @mixin c; }',
+               'a { color: black; }');
 });
 
 it('supports mixins with content', () => {
     return run('@define-mixin m { @media { @mixin-content; } } ' +
-                  '@mixin m { a {} }',
-                  '@media {\n    a {}\n}');
+               '@mixin m { a {} }',
+               '@media {\n    a {}\n}');
 });
 
 it('supports mixins with declarations content', () => {
     return run('@define-mixin m { a: 1; @mixin-content; } ' +
-                  '.m { @mixin m { b: 2 } }',
-                  '.m { a: 1; b: 2 }');
+               '.m { @mixin m { b: 2 } }',
+               '.m { a: 1; b: 2 }');
 });
 
 it('supports mixins with empty content', () => {
@@ -134,8 +134,8 @@ it('supports mixins with empty content', () => {
 
 it('uses variables', () => {
     return run('@define-mixin m $a, $b: b, $c: c { v: $a $b $c; }' +
-                  '@mixin m 1, 2;',
-                  'v: 1 2 c;');
+               '@mixin m 1, 2;',
+               'v: 1 2 c;');
 });
 
 it('loads mixins from dir', () => {
@@ -204,16 +204,16 @@ it('coverts mixins values', () => {
 
 it('supports nested mixins', () => {
     return run('@define-mixin a $a { a: $a; } ' +
-                  '@define-mixin b $b { @mixin a $b; } ' +
-                  '@mixin b 1;',
-                  'a: 1;');
+               '@define-mixin b $b { @mixin a $b; } ' +
+               '@mixin b 1;',
+               'a: 1;');
 });
 
 it('supports nested mixins in mixin-content', () => {
     return run('@define-mixin a { a: 1 } ' +
-                  '@define-mixin b { b { @mixin-content } } ' +
-                  '@mixin b { @mixin a }',
-                  'b {\n    a: 1\n}');
+               '@define-mixin b { b { @mixin-content } } ' +
+               '@mixin b { @mixin a }',
+               'b {\n    a: 1\n}');
 });
 
 it('supports nested mixins on object mixins', () => {
@@ -228,9 +228,9 @@ it('supports nested mixins on object mixins', () => {
 
 it('supports default arguments in nested mixins', () => {
     return run('@define-mixin a $a: 1 { a: $a } ' +
-                  '@define-mixin b $b { @mixin a $b } ' +
-                  '@mixin b;',
-                  'a: 1;');
+               '@define-mixin b $b { @mixin a $b } ' +
+               '@mixin b;',
+               'a: 1;');
 });
 
 it('works in sync mode on no option', () => {
