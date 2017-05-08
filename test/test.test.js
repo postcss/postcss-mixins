@@ -117,7 +117,7 @@ it('supports default value', () => {
 it('supports mixins with content', () => {
     return run('@define-mixin m { @media { @mixin-content; } } ' +
                '@mixin m { a {} }',
-               '@media {\n    a {}\n}');
+               '@media { a {} }');
 });
 
 it('supports mixins with declarations content', () => {
@@ -213,7 +213,7 @@ it('supports nested mixins in mixin-content', () => {
     return run('@define-mixin a { a: 1 } ' +
                '@define-mixin b { b { @mixin-content } } ' +
                '@mixin b { @mixin a }',
-               'b {\n    a: 1\n}');
+               'b { a: 1}');
 });
 
 it('supports nested mixins on object mixins', () => {

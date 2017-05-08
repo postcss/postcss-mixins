@@ -14,16 +14,16 @@
   "repository": "postcss/postcss-mixins",
   "dependencies": {
     "globby": "^6.1.0",
-    "postcss": "^5.2.6",
-    "postcss-js": "^0.2.0",
-    "postcss-simple-vars": "^3.0.0",
-    "sugarss": "^0.2.0"
+    "postcss": "^6.0.1",
+    "postcss-js": "^1.0.0",
+    "postcss-simple-vars": "^4.0.0",
+    "sugarss": "^1.0.0"
   },
   "devDependencies": {
-    "eslint": "^3.12.2",
+    "eslint": "^3.19.0",
     "eslint-config-postcss": "^2.0.2",
-    "jest": "^18.0.0",
-    "lint-staged": "^3.2.4",
+    "jest": "^20.0.0",
+    "lint-staged": "^3.4.1",
     "pre-commit": "^1.2.2"
   },
   "scripts": {

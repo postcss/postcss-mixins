@@ -55,7 +55,9 @@ function insertMixin(result, mixins, rule, processMixins, opts) {
 
         var proxy = postcss.root();
         for ( i = 0; i < mixin.nodes.length; i++ ) {
-            proxy.append( mixin.nodes[i].clone() );
+            let node = mixin.nodes[i].clone();
+            delete node.raws.before;
+            proxy.append( node );
         }
 
         if ( meta.args.length ) {
