@@ -217,6 +217,33 @@ require('postcss-mixins')({
 
 [PostCSS API]: https://github.com/postcss/postcss/blob/master/docs/api.md
 
+### Defining mixins in JS rather than CSS
+There may be occasions when it is preferable to define mixins in a JS file, rather than a CSS file. For example, defining your mixins as JS may enable your build system to use mixins across multiple CSS files without needing to `@import` mixins in each CSS file.
+
+Functions are defined in your `mixins.js` file like this. Note that strings should be quoted:
+
+````js
+module.exports = {
+    FontRegular: function () {
+        return {
+            'font-family': '$your-font-stack',
+            'font-weight': '400'
+        };
+    }
+}    
+````
+
+When you need to pass arguments to a mixin, ensure you pass 'rule' as your first argument. For example:
+
+````js
+Spinner: function (rule, $backgroundColor, $highlightColor)  {
+    return {
+        'border': '2px solid ' + $backgroundColor,
+        'border-left-color': $highlightColor
+    };
+}
+````
+
 ## Options
 
 Call plugin function to set options:
