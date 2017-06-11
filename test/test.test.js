@@ -239,7 +239,6 @@ it('works in sync mode on no option', () => {
     expect(postcss(mixins()).process(input).css).toEqual(output);
 });
 
-
 it('cans remove unknown mixin on request', () => {
     return run('@define-mixin a { a: 1 } @add-mixin a', 'a: 1');
 });
