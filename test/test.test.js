@@ -114,32 +114,28 @@ it('uses variable', () => {
 
 it('supports default value', () => {
     return run(
-        '@define-mixin c $color: black { color: $color; } ' +
-           'a { @mixin c; }',
+        '@define-mixin c $color: black { color: $color; } a { @mixin c; }',
         'a { color: black; }'
     );
 });
 
 it('supports mixins with content', () => {
     return run(
-        '@define-mixin m { @media { @mixin-content; } } ' +
-            '@mixin m { a {} }',
+        '@define-mixin m { @media { @mixin-content; } } @mixin m { a {} }',
         '@media { a {} }'
     );
 });
 
 it('supports mixins with declarations content', () => {
     return run(
-        '@define-mixin m { a: 1; @mixin-content; } ' +
-            '.m { @mixin m { b: 2 } }',
+        '@define-mixin m { a: 1; @mixin-content; } .m { @mixin m { b: 2 } }',
         '.m { a: 1; b: 2 }'
     );
 });
 
 it('supports mixins with empty content', () => {
     return run(
-        '@define-mixin m { a: 1; @mixin-content; } ' +
-            '.m { @mixin m; }',
+        '@define-mixin m { a: 1; @mixin-content; } .m { @mixin m; }',
         '.m { a: 1; }'
     );
 });
@@ -154,8 +150,7 @@ it('supports mixins with multiple content', () => {
 
 it('uses variables', () => {
     return run(
-        '@define-mixin m $a, $b: b, $c: c { v: $a $b $c; }' +
-            '@mixin m 1, 2;',
+        '@define-mixin m $a, $b: b, $c: c { v: $a $b $c; } @mixin m 1, 2;',
         'v: 1 2 c;'
     );
 });
