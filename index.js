@@ -66,7 +66,7 @@ function insertMixin(result, mixins, rule, processMixins, opts) {
         if ( meta.content ) {
             proxy.walkAtRules('mixin-content', function (content) {
                 if ( rule.nodes && rule.nodes.length > 0 ) {
-                    content.replaceWith(rule.nodes);
+                    content.replaceWith(rule.clone().nodes);
                 } else {
                     content.remove();
                 }

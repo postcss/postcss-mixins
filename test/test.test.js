@@ -144,6 +144,14 @@ it('supports mixins with empty content', () => {
     );
 });
 
+it('supports mixins with multiple content', () => {
+    return run(
+        '@define-mixin m { @mixin-content; @mixin-content; } ' +
+            '.m { @mixin m { a: 1 } }',
+        '.m { a: 1; a: 1 }'
+    );
+});
+
 it('uses variables', () => {
     return run(
         '@define-mixin m $a, $b: b, $c: c { v: $a $b $c; }' +
