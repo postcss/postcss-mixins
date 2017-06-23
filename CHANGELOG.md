@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.1
+* Fix multiple `@mixin-content` usage.
+
 ## 6.0
 * Use PostCSS 6.0.
 
