@@ -28,7 +28,7 @@
   },
   "scripts": {
     "lint-staged": "lint-staged",
-    "test": "jest --coverage && eslint *.js test/**/*.js"
+    "test": "jest --coverage && eslint *.js test/{**/,}*.js"
   },
   "eslintConfig": {
     "extends": "eslint-config-postcss/es5",
