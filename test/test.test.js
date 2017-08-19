@@ -4,11 +4,11 @@ var path    = require('path');
 var mixins = require('../');
 
 function run(input, output, opts) {
-    return postcss([ mixins(opts) ]).process(input)
-        .then( result => {
-            expect(result.css).toEqual(output);
-            expect(result.warnings().length).toBe(0);
-        });
+    return postcss([ mixins(opts) ]).process(input).then(result => {
+        expect(result.css).toEqual(output);
+        expect(result.warnings().length).toBe(0);
+        return result;
+    });
 }
 
 it('throws error on unknown mixin', () => {
@@ -162,7 +162,30 @@ it('loads mixins from dir', () => {
         {
             mixinsDir: path.join(__dirname, 'mixins')
         }
-    );
+    ).then(result => {
+        expect(result.messages).toEqual([
+            {
+                file: path.join(__dirname, 'mixins/a.js'),
+                type: 'dependency'
+            },
+            {
+                file: path.join(__dirname, 'mixins/b.json'),
+                type: 'dependency'
+            },
+            {
+                file: path.join(__dirname, 'mixins/c.CSS'),
+                type: 'dependency'
+            },
+            {
+                file: path.join(__dirname, 'mixins/d.sss'),
+                type: 'dependency'
+            },
+            {
+                file: path.join(__dirname, 'mixins/e.pcss'),
+                type: 'dependency'
+            }
+        ]);
+    });
 });
 
 it('loads mixins from dirs', () => {
