@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1
+* Pass `dependency` message for every loaded mixin files for `postcss-loader`.
+
 ## 6.0.1
 * Fix multiple `@mixin-content` usage.
 
