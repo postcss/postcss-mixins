@@ -1,6 +1,10 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.1
+* Add `parent` to `dependency` message (by Keisuke Kan).
+* Throw error on wrong mixin type.
+
 ## 6.1
 * Pass `dependency` message for every loaded mixin files for `postcss-loader`.
 
