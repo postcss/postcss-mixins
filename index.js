@@ -88,6 +88,8 @@ function insertMixin(result, mixins, rule, processMixins, opts) {
         if ( typeof nodes === 'object' ) {
             insertObject(rule, nodes, processMixins);
         }
+    } else {
+        throw new Error('Wrong ' + name + ' mixin type ' + typeof mixin);
     }
 
     if ( rule.parent ) rule.remove();

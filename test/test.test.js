@@ -97,6 +97,18 @@ it('supports nested function mixins', () => {
         });
 });
 
+it('throws on unknown mixin type', done => {
+    const opts = {
+        mixins: {
+            a: 1
+        }
+    };
+    return postcss([ mixins(opts) ]).process('@mixin a').catch(e => {
+        expect(e.message).toEqual('Wrong a mixin type number');
+        done();
+    });
+});
+
 it('supports CSS mixins', () => {
     return run(
         '@define-mixin black { color: black; } a { @mixin black; }',
