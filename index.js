@@ -168,9 +168,14 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
                 var ext      = path.extname(file).toLowerCase();
                 var name     = path.basename(file, path.extname(file));
                 var relative = path.join(cwd, path.relative(cwd, file));
+                var parent = '';
+                if (opts.parent) {
+                    parent = opts.parent;
+                }
                 result.messages.push({
                     type: 'dependency',
-                    file: relative
+                    file: relative,
+                    parent: parent
                 });
                 return new Promise(function (resolve, reject) {
                     if ( ext === '.css' || ext === '.pcss' || ext === '.sss' ) {

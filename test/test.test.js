@@ -166,23 +166,68 @@ it('loads mixins from dir', () => {
         expect(result.messages).toEqual([
             {
                 file: path.join(__dirname, 'mixins/a.js'),
-                type: 'dependency'
+                type: 'dependency',
+                parent: ''
             },
             {
                 file: path.join(__dirname, 'mixins/b.json'),
-                type: 'dependency'
+                type: 'dependency',
+                parent: ''
             },
             {
                 file: path.join(__dirname, 'mixins/c.CSS'),
-                type: 'dependency'
+                type: 'dependency',
+                parent: ''
             },
             {
                 file: path.join(__dirname, 'mixins/d.sss'),
-                type: 'dependency'
+                type: 'dependency',
+                parent: ''
             },
             {
                 file: path.join(__dirname, 'mixins/e.pcss'),
-                type: 'dependency'
+                type: 'dependency',
+                parent: ''
+            }
+        ]);
+    });
+});
+
+it('loads mixins from dir with parent options', () => {
+    var parent =  path.join(__dirname, 'a.js');
+    return run(
+        'a { @mixin a 1; @mixin b; @mixin c; @mixin d; @mixin e; }',
+        'a { a: 1; b: 2; c: 3; d: 4; e: 5; }',
+        {
+            mixinsDir: path.join(__dirname, 'mixins'),
+            parent: path.join(__dirname, 'a.js')
+        }
+    ).then(result => {
+        expect(result.messages).toEqual([
+            {
+                file: path.join(__dirname, 'mixins/a.js'),
+                type: 'dependency',
+                parent: parent
+            },
+            {
+                file: path.join(__dirname, 'mixins/b.json'),
+                type: 'dependency',
+                parent: parent
+            },
+            {
+                file: path.join(__dirname, 'mixins/c.CSS'),
+                type: 'dependency',
+                parent: parent
+            },
+            {
+                file: path.join(__dirname, 'mixins/d.sss'),
+                type: 'dependency',
+                parent: parent
+            },
+            {
+                file: path.join(__dirname, 'mixins/e.pcss'),
+                type: 'dependency',
+                parent: parent
             }
         ]);
     });
