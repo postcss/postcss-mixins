@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2
+* Add `@mixin-content` support for object mixins.
+
 ## 6.1.1
 * Add `parent` to `dependency` message (by Keisuke Kan).
 * Throw error on wrong mixin type.
