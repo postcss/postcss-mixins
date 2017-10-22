@@ -163,6 +163,22 @@ it('supports mixins with multiple content', () => {
     );
 });
 
+it('supports object mixins with content', () => {
+    return run(
+        '@mixin obj { b {} }',
+        'a { b {}\n}',
+        {
+            mixins: {
+                obj: {
+                    a: {
+                        '@mixin-content': { }
+                    }
+                }
+            }
+        }
+    );
+});
+
 it('uses variables', () => {
     return run(
         '@define-mixin m $a, $b: b, $c: c { v: $a $b $c; } @mixin m 1, 2;',

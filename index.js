@@ -18,12 +18,23 @@ function insideDefine(rule) {
     }
 }
 
+function processMixinContent(rule, from) {
+    rule.walkAtRules('mixin-content', function (content) {
+        if ( from.nodes && from.nodes.length > 0 ) {
+            content.replaceWith(from.clone().nodes);
+        } else {
+            content.remove();
+        }
+    });
+}
+
 function insertObject(rule, obj, processMixins) {
     var root = jsToCss(obj);
     root.each(function (node) {
         node.source = rule.source;
     });
     processMixins(root);
+    processMixinContent(root, rule);
     rule.parent.insertBefore(rule, root);
 }
 
@@ -63,15 +74,8 @@ function insertMixin(result, mixins, rule, processMixins, opts) {
         if ( meta.args.length ) {
             vars({ only: values })(proxy);
         }
-        if ( meta.content ) {
-            proxy.walkAtRules('mixin-content', function (content) {
-                if ( rule.nodes && rule.nodes.length > 0 ) {
-                    content.replaceWith(rule.clone().nodes);
-                } else {
-                    content.remove();
-                }
-            });
-        }
+
+        if ( meta.content ) processMixinContent(proxy, rule);
         processMixins(proxy);
 
         rule.parent.insertBefore(rule, proxy);
