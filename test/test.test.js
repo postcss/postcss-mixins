@@ -61,8 +61,10 @@ it('passes undefined on missed parameters', () => {
 });
 
 it('supports object mixins', () => {
-    return run('@mixin obj;',
-        '@media screen {\n    b {\n        one: 1\n    }\n}', {
+    return run(
+        '@mixin obj;',
+        '@media screen {\n    b {\n        one: 1\n    }\n}',
+        {
             mixins: {
                 obj: {
                     '@media screen': {
@@ -72,7 +74,8 @@ it('supports object mixins', () => {
                     }
                 }
             }
-        });
+        }
+    );
 });
 
 it('supports nested function mixins', () => {
