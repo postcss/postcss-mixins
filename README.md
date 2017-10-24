@@ -67,27 +67,7 @@ postcss([ require('postcss-mixins') ])
 
 See [PostCSS] docs for examples for your environment.
 
-## Mixins
-
-### Migration from Sass
-
-If you need to use Sass and PostCSS mixins together
-(for example, while migration), you could use `@add-mixin`,
-instead of `@mixin`. Just put PostCSS after Sass.
-
-```sass
-// Legacy SCSS
-@mixin old {
-    …
-}
-@include old;
-
-// New code
-@define-mixin new {
-    …
-}
-@add-mixin new;
-```
+[PostCSS API]: https://github.com/postcss/postcss/blob/master/docs/api.md
 
 
 ### CSS Mixin
@@ -117,6 +97,7 @@ complicated logic, you should use function mixin.
 
 [postcss-nested]:      https://github.com/postcss/postcss-nested
 [postcss-simple-vars]: https://github.com/postcss/postcss-simple-vars
+
 
 ### Function Mixin
 
@@ -215,9 +196,11 @@ require('postcss-mixins')({
 });
 ```
 
-#### Using @mixin-context with CSS or JavaScript
+### Mixin Content
 
-##### With CSS Mixins
+`@mixin-context` at-rule will be replaced with mixin `@mixin` children.
+For exampel, CSS mxins:
+
 ```SCSS
 @define-mixin isIE {
     .isIE & {
@@ -226,7 +209,8 @@ require('postcss-mixins')({
 }
 ```
 
-##### With JS Functions
+or JS mixins:
+
 ```js
 require('postcss-mixins')({
     mixins: {
@@ -237,9 +221,9 @@ require('postcss-mixins')({
 });
 ```
 
-##### Usage:
+could be used like this:
 
-```SCSS
+```scss
 .foo {
     color: blue;
 
@@ -253,7 +237,26 @@ require('postcss-mixins')({
 .isIE .foo { color: red; }
 ```
 
-[PostCSS API]: https://github.com/postcss/postcss/blob/master/docs/api.md
+
+### Migration from Sass
+
+If you need to use Sass and PostCSS mixins together
+(for example, while migration), you could use `@add-mixin`,
+instead of `@mixin`. Just put PostCSS after Sass.
+
+```sass
+// Legacy SCSS
+@mixin old {
+    …
+}
+@include old;
+
+// New code
+@define-mixin new {
+    …
+}
+@add-mixin new;
+```
 
 ## Options
 
