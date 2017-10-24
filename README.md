@@ -180,12 +180,12 @@ require('postcss-mixins')({
             }
         }
     }
-}
+});
 ```
 
 Mixin body will be in `mixin.nodes`:
 
-```
+```js
 var postcss = require('postcss');
 
 require('postcss-mixins')({
@@ -196,7 +196,7 @@ require('postcss-mixins')({
             mixin.replaceWith(rule);
         }
     }
-}
+});
 ```
 
 Or you can use object instead of function:
@@ -212,7 +212,45 @@ require('postcss-mixins')({
             }
         }
     }
+});
+```
+
+#### Using @mixin-context with CSS or JavaScript
+
+##### With CSS Mixins
+```SCSS
+@define-mixin isIE {
+    .isIE & {
+        @mixin-content;
+    }
 }
+```
+
+##### With JS Functions
+```js
+require('postcss-mixins')({
+    mixins: {
+        isIe: function () {
+            '@mixin-content': {},
+        }
+    }
+});
+```
+
+##### Usage:
+
+```SCSS
+.foo {
+    color: blue;
+
+    @mixin isIE {
+        color: red;
+    }
+}
+
+// output
+.foo { color: blue; }
+.isIE .foo { color: red; }
 ```
 
 [PostCSS API]: https://github.com/postcss/postcss/blob/master/docs/api.md
