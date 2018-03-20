@@ -172,7 +172,7 @@ var postcss = require('postcss');
 require('postcss-mixins')({
     mixins: {
         hover: function (mixin) {
-            let rule = postcss.rule({ selector: '&:hover', '&.hover' });
+            let rule = postcss.rule({ selector: '&:hover, &.hover' });
             rule.append(mixin.nodes);
             mixin.replaceWith(rule);
         }
