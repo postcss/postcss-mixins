@@ -4,17 +4,21 @@ var path    = require('path');
 var mixins = require('../');
 
 function run(input, output, opts) {
-    return postcss([ mixins(opts) ]).process(input).then(result => {
-        expect(result.css).toEqual(output);
-        expect(result.warnings().length).toBe(0);
-        return result;
-    });
+    return postcss([ mixins(opts) ])
+        .process(input, { from: undefined })
+        .then(result => {
+            expect(result.css).toEqual(output);
+            expect(result.warnings().length).toBe(0);
+            return result;
+        });
 }
 
 it('throws error on unknown mixin', () => {
-    return postcss(mixins).process('@mixin A').catch(err => {
-        expect(err.reason).toEqual('Undefined mixin A');
-    });
+    return postcss(mixins)
+        .process('@mixin A', { from: undefined })
+        .catch(err => {
+            expect(err.reason).toEqual('Undefined mixin A');
+        });
 });
 
 it('cans remove unknown mixin on request', () => {
@@ -106,10 +110,12 @@ it('throws on unknown mixin type', done => {
             a: 1
         }
     };
-    return postcss([ mixins(opts) ]).process('@mixin a').catch(e => {
-        expect(e.message).toEqual('Wrong a mixin type number');
-        done();
-    });
+    return postcss([ mixins(opts) ])
+        .process('@mixin a', { from: undefined })
+        .catch(e => {
+            expect(e.message).toEqual('Wrong a mixin type number');
+            done();
+        });
 });
 
 it('supports CSS mixins', () => {
@@ -234,33 +240,39 @@ it('loads mixins from dir with parent options', () => {
             parent: path.join(__dirname, 'a.js')
         }
     ).then(result => {
-        expect(result.messages).toEqual([
-            {
-                file: path.join(__dirname, 'mixins/a.js'),
-                type: 'dependency',
-                parent: parent
-            },
-            {
-                file: path.join(__dirname, 'mixins/b.json'),
-                type: 'dependency',
-                parent: parent
-            },
-            {
-                file: path.join(__dirname, 'mixins/c.CSS'),
-                type: 'dependency',
-                parent: parent
-            },
-            {
-                file: path.join(__dirname, 'mixins/d.sss'),
-                type: 'dependency',
-                parent: parent
-            },
-            {
-                file: path.join(__dirname, 'mixins/e.pcss'),
-                type: 'dependency',
-                parent: parent
-            }
-        ]);
+        // Array could have files sorted in non-alphabetical order.
+        // Check array length, and that it contains all required items,
+        // regardless they order within array.
+        expect(result.messages).toHaveLength(5);
+        expect(result.messages).toEqual(
+            expect.arrayContaining([
+                {
+                    file: path.join(__dirname, 'mixins/a.js'),
+                    type: 'dependency',
+                    parent: parent
+                },
+                {
+                    file: path.join(__dirname, 'mixins/b.json'),
+                    type: 'dependency',
+                    parent: parent
+                },
+                {
+                    file: path.join(__dirname, 'mixins/c.CSS'),
+                    type: 'dependency',
+                    parent: parent
+                },
+                {
+                    file: path.join(__dirname, 'mixins/d.sss'),
+                    type: 'dependency',
+                    parent: parent
+                },
+                {
+                    file: path.join(__dirname, 'mixins/e.pcss'),
+                    type: 'dependency',
+                    parent: parent
+                }
+            ])
+        );
     });
 });
 
@@ -313,9 +325,11 @@ it('coverts mixins values', () => {
             }
         }
     }));
-    return proccessor.process('a{ @mixin empty; }').then(result => {
-        expect(typeof result.root.first.first.value).toEqual('string');
-    });
+    return proccessor
+        .process('a{ @mixin empty; }', { from: undefined })
+        .then(result => {
+            expect(typeof result.root.first.first.value).toEqual('string');
+        });
 });
 
 it('supports nested mixins', () => {
@@ -358,7 +372,9 @@ it('supports default arguments in nested mixins', () => {
 it('works in sync mode on no option', () => {
     var input = '@define-mixin a { a: 1 }; @mixin a';
     var output = 'a: 1';
-    expect(postcss(mixins()).process(input).css).toEqual(output);
+    expect(
+        postcss(mixins()).process(input, { from: undefined }).css
+    ).toEqual(output);
 });
 
 it('cans remove unknown mixin on request', () => {
