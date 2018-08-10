@@ -316,7 +316,7 @@ module.exports = {
 Type: `string|string[]`
 
 Similar to [`mixinsDir`](#mixinsdir); except, you can provide
-[glob](https://github.com/isaacs/node-glob) syntax to target or not target
+[fast-glob](https://github.com/mrmlnc/fast-glob) syntax to target or not target
 specific files.
 
 ```js
