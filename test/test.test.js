@@ -200,7 +200,9 @@ it('loads mixins from dir', () => {
             mixinsDir: path.join(__dirname, 'mixins')
         }
     ).then(result => {
-        expect(result.messages).toEqual([
+        expect(
+            result.messages.sort((a, b) => a.file.localeCompare(b.file))
+        ).toEqual([
             {
                 file: path.join(__dirname, 'mixins/a.js'),
                 type: 'dependency',

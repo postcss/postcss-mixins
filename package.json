@@ -16,8 +16,8 @@
     "globby": "^8.0.1",
     "postcss": "^7.0.2",
     "postcss-js": "^2.0.0",
-    "postcss-simple-vars": "^4.1.0",
-    "sugarss": "^1.0.1"
+    "postcss-simple-vars": "^5.0.1",
+    "sugarss": "^2.0.0"
   },
   "devDependencies": {
     "eslint": "^4.9.0",
