@@ -1,3 +1,3 @@
 module.exports = {
-    c: '3'
-};
+  c: '3'
+}
