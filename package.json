@@ -9,6 +9,9 @@
     "mixins",
     "sass"
   ],
+  "scripts": {
+    "test": "jest --coverage && eslint *.js test/{**/,}*.js"
+  },
   "author": "Andrey Sitnik <andrey@sitnik.ru>",
   "license": "MIT",
   "repository": "postcss/postcss-mixins",
@@ -22,13 +25,9 @@
   "devDependencies": {
     "eslint": "^4.9.0",
     "eslint-config-postcss": "^2.0.2",
+    "husky": "^1.2.0",
     "jest": "^23.4.2",
-    "lint-staged": "^7.2.0",
-    "pre-commit": "^1.2.2"
-  },
-  "scripts": {
-    "lint-staged": "lint-staged",
-    "test": "jest --coverage && eslint *.js test/{**/,}*.js"
+    "lint-staged": "^7.2.0"
   },
   "eslintConfig": {
     "extends": "eslint-config-postcss/es5",
@@ -50,7 +49,9 @@
   "lint-staged": {
     "*.js": "eslint"
   },
-  "pre-commit": [
-    "lint-staged"
-  ]
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
 }
