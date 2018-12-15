@@ -83,7 +83,7 @@ You can use it with [postcss-nested] plugin:
     padding-left: 16px;
     &::after {
         content: "";
-        background-url: url(/icons/$(name).png);
+        background: url(/icons/$(name).png);
     }
 }
 
