@@ -190,9 +190,9 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
               }
               var root
               if (ext === '.sss') {
-                root = sugarss.parse(contents)
+                root = sugarss.parse(contents, { from: relative })
               } else {
-                root = postcss.parse(contents)
+                root = postcss.parse(contents, { from: relative })
               }
               root.walkAtRules('define-mixin', function (atrule) {
                 defineMixin(result, mixins, atrule)
