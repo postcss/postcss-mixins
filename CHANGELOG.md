@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.2
+* Fix source map for mixins from SugarSS and CSS files.
+
 ## 6.2.1
 * Update `sugarss` and `postcss-simple-vars` (by @ambar).
 
