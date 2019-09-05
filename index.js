@@ -153,7 +153,7 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
     function process () {
       if (typeof opts.mixins === 'object') {
         for (var i in opts.mixins) {
-          mixins[i] = { mixin: opts.mixins[i] }
+          mixins[i] = { mixin: opts.mixins[i], args: [] }
         }
       }
       processMixins(css)
