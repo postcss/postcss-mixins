@@ -135,6 +135,12 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
     })
   }
 
+  if (opts.mixinsText) {
+    if (!Array.isArray(opts.mixinsText)) {
+      opts.mixinsText = [opts.mixinsText]
+    }
+  }
+
   if (opts.mixinsFiles) globs = globs.concat(opts.mixinsFiles)
 
   return function (css, result) {
@@ -156,6 +162,15 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
           mixins[i] = { mixin: opts.mixins[i] }
         }
       }
+
+      if (opts.mixinsText) {
+        opts.mixinsText.forEach(function (text) {
+          postcss.parse(text).walkAtRules('define-mixin', function (atrule) {
+            defineMixin(result, mixins, atrule)
+          })
+        })
+      }
+
       processMixins(css)
     }
 

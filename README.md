@@ -325,6 +325,18 @@ require('postcss-mixins')({
 })
 ```
 
+### `mixinsText`
+
+Type: `string|string[]`
+
+All of your mixins as the actual contents of the files.
+
+```js
+require('postcss-mixins')({
+  mixinsText: '@define-mixin black { color: black; }'
+});
+```
+
 ### `silent`
 
 Remove unknown mixins and do not throw a error. Default is `false`.

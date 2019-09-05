@@ -125,6 +125,14 @@ it('supports CSS mixins', function () {
   )
 })
 
+it('supports mixins text', function () {
+  return run(
+    'a { @mixin black; }',
+    'a { color: black; }',
+    { mixinsText: '@define-mixin black { color: black; }' }
+  )
+})
+
 it('uses variable', function () {
   return run(
     '@define-mixin color $color { color: $color $other; } ' +
