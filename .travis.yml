@@ -2,7 +2,6 @@ language: node_js
 cache: yarn
 node_js:
   - stable
+  - "12"
   - "10"
   - "8"
-git:
-  depth: 5
