@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.3
+* Fix plugin to work with webpack watch (by @Mesqalito).
+
 ## 6.2.2
 * Fix source map for mixins from SugarSS and CSS files.
 
