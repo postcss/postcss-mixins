@@ -17,8 +17,8 @@
   "repository": "postcss/postcss-mixins",
   "dependencies": {
     "globby": "^8.0.1",
-    "postcss": "^7.0.17",
-    "postcss-js": "^2.0.2",
+    "postcss": "^7.0.21",
+    "postcss-js": "^2.0.3",
     "postcss-simple-vars": "^5.0.2",
     "sugarss": "^2.0.0"
   },
@@ -35,9 +35,9 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-security": "^1.4.0",
     "eslint-plugin-standard": "^4.0.0",
-    "husky": "^3.0.0",
-    "jest": "^24.8.0",
-    "lint-staged": "^9.2.0"
+    "husky": "^3.0.9",
+    "jest": "^24.9.0",
+    "lint-staged": "^9.4.2"
   },
   "eslintConfig": {
     "extends": "eslint-config-postcss/es5",
