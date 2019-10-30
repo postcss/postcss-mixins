@@ -124,7 +124,6 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
 
   var cwd = process.cwd()
   var globs = []
-  var mixins = { }
 
   if (opts.mixinsDir) {
     if (!Array.isArray(opts.mixinsDir)) {
@@ -138,6 +137,8 @@ module.exports = postcss.plugin('postcss-mixins', function (opts) {
   if (opts.mixinsFiles) globs = globs.concat(opts.mixinsFiles)
 
   return function (css, result) {
+    var mixins = { }
+
     function processMixins (root) {
       root.walkAtRules(function (i) {
         if (i.name === 'mixin' || i.name === 'add-mixin') {
