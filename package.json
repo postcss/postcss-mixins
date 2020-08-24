@@ -10,61 +10,66 @@
     "sass"
   ],
   "scripts": {
-    "test": "jest --coverage && eslint *.js test/{**/,}*.js"
+    "test": "eslint-ci *.js && jest-ci --coverage"
   },
   "author": "Andrey Sitnik <andrey@sitnik.ru>",
   "license": "MIT",
   "repository": "postcss/postcss-mixins",
   "dependencies": {
-    "globby": "^8.0.1",
-    "postcss": "^7.0.21",
+    "globby": "^11.0.1",
+    "postcss": "postcss/postcss#ose",
     "postcss-js": "^2.0.3",
-    "postcss-simple-vars": "^5.0.2",
+    "postcss-simple-vars": "postcss/postcss-simple-vars",
     "sugarss": "^2.0.0"
   },
   "devDependencies": {
-    "@logux/eslint-config": "^29.0.1",
-    "clean-publish": "^1.1.2",
-    "eslint": "^6.0.1",
-    "eslint-config-postcss": "^3.0.7",
-    "eslint-config-standard": "^13.0.1",
-    "eslint-plugin-es5": "^1.4.1",
-    "eslint-plugin-import": "^2.18.0",
-    "eslint-plugin-jest": "^22.10.0",
-    "eslint-plugin-node": "^9.1.0",
+    "@logux/eslint-config": "^40.0.3",
+    "clean-publish": "^1.1.8",
+    "eslint": "^7.7.0",
+    "eslint-ci": "^1.0.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^23.20.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prefer-let": "^1.0.2",
+    "eslint-plugin-prettierx": "^0.14.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-security": "^1.4.0",
-    "eslint-plugin-standard": "^4.0.0",
-    "husky": "^3.0.9",
-    "jest": "^24.9.0",
-    "lint-staged": "^9.4.2"
-  },
-  "eslintConfig": {
-    "extends": "eslint-config-postcss/es5",
-    "rules": {
-      "security/detect-non-literal-require": "off",
-      "consistent-return": "off",
-      "no-invalid-this": "off",
-      "global-require": "off"
-    },
-    "env": {
-      "jest": true
-    }
-  },
-  "jest": {
-    "coverageThreshold": {
-      "global": {
-        "statements": 100
-      }
-    },
-    "testEnvironment": "node"
-  },
-  "lint-staged": {
-    "*.js": "eslint"
+    "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-unicorn": "^21.0.0",
+    "husky": "^4.2.5",
+    "jest": "^26.4.1",
+    "jest-ci": "^0.1.1",
+    "lint-staged": "^10.2.11",
+    "postcss": "postcss/postcss#ose",
+    "postcss-sharec-config": "^0.1.1"
   },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "*.js": "eslint --fix"
+  },
+  "eslintConfig": {
+    "extends": "@logux/eslint-config",
+    "rules": {
+      "security/detect-non-literal-require": "off",
+      "node/global-require": "off",
+      "consistent-return": "off"
+    }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageThreshold": {
+      "global": {
+        "statements": 100
+      }
+    }
+  },
+  "sharec": {
+    "config": "postcss-sharec-config",
+    "version": "0.1.1"
   }
 }

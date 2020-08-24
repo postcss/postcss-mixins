@@ -1,3 +1,1 @@
-module.exports = function (mixin, value) {
-  return { a: value }
-}
+module.exports = (mixin, value) => ({ a: value })
