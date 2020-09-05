@@ -2,7 +2,6 @@ let { join, basename, extname, relative } = require('path')
 let { promisify } = require('util')
 let { platform } = require('os')
 let jsToCss = require('postcss-js/parser')
-let postcss = require('postcss')
 let sugarss = require('sugarss')
 let globby = require('globby')
 let vars = require('postcss-simple-vars')
@@ -12,14 +11,66 @@ let readFile = promisify(fs.readFile)
 
 let IS_WIN = platform().includes('win32')
 
-function insideDefine (rule) {
-  let parent = rule.parent
-  if (!parent) {
+function addMixin (helpers, mixins, rule, file) {
+  let name = rule.params.split(/\s/, 1)[0]
+  let other = rule.params.slice(name.length).trim()
+
+  let args = []
+  if (other.length) {
+    args = helpers.list.comma(other).map(str => {
+      let arg = str.split(':', 1)[0]
+      let defaults = str.slice(arg.length + 1)
+      return [arg.slice(1).trim(), defaults.trim()]
+    })
+  }
+
+  let content = false
+  rule.walkAtRules('mixin-content', () => {
+    content = true
     return false
-  } else if (parent.name === 'define-mixin') {
-    return true
-  } else {
-    return insideDefine(parent)
+  })
+
+  mixins[name] = { mixin: rule, args, content }
+  if (file) mixins[name].file = file
+  rule.remove()
+}
+
+async function loadGlobalMixin (helpers, globs) {
+  let cwd = process.cwd()
+  let files = await globby(globs, { caseSensitiveMatch: IS_WIN })
+  let mixins = {}
+  await Promise.all(
+    files.map(async i => {
+      let ext = extname(i).toLowerCase()
+      let name = basename(i, extname(i))
+      let path = join(cwd, relative(cwd, i))
+      if (ext === '.css' || ext === '.pcss' || ext === '.sss') {
+        let content = await readFile(path)
+        let root
+        if (ext === '.sss') {
+          root = sugarss.parse(content, { from: path })
+        } else {
+          root = helpers.parse(content, { from: path })
+        }
+        root.walkAtRules('define-mixin', atrule => {
+          addMixin(helpers, mixins, atrule, path)
+        })
+      } else {
+        mixins[name] = { mixin: require(path), file: path }
+      }
+    })
+  )
+  return mixins
+}
+
+function addGlobalMixins (helpers, local, global, parent) {
+  for (let name in global) {
+    helpers.result.messages.push({
+      type: 'dependency',
+      file: global[name].file,
+      parent: parent || ''
+    })
+    local[name] = global[name]
   }
 }
 
@@ -33,17 +84,16 @@ function processMixinContent (rule, from) {
   })
 }
 
-function insertObject (rule, obj, processMixins) {
+function insertObject (rule, obj) {
   let root = jsToCss(obj)
   root.each(node => {
     node.source = rule.source
   })
-  processMixins(root)
   processMixinContent(root, rule)
   rule.parent.insertBefore(rule, root)
 }
 
-function insertMixin (result, mixins, rule, processMixins, opts) {
+function insertMixin (helpers, mixins, rule, opts) {
   let name = rule.params.split(/\s/, 1)[0]
   let rest = rule.params.slice(name.length).trim()
 
@@ -51,7 +101,7 @@ function insertMixin (result, mixins, rule, processMixins, opts) {
   if (rest.trim() === '') {
     params = []
   } else {
-    params = postcss.list.comma(rest)
+    params = helpers.list.comma(rest)
   }
 
   let meta = mixins[name]
@@ -68,7 +118,7 @@ function insertMixin (result, mixins, rule, processMixins, opts) {
       values[meta.args[i][0]] = params[i] || meta.args[i][1]
     }
 
-    let proxy = postcss.root()
+    let proxy = new helpers.Root()
     for (i = 0; i < mixin.nodes.length; i++) {
       let node = mixin.nodes[i].clone()
       delete node.raws.before
@@ -76,23 +126,22 @@ function insertMixin (result, mixins, rule, processMixins, opts) {
     }
 
     if (meta.args.length) {
-      proxy = postcss([vars({ only: values })]).process(proxy).root
+      proxy = helpers.postcss([vars({ only: values })]).process(proxy).root
     }
 
     if (meta.content) processMixinContent(proxy, rule)
-    processMixins(proxy)
 
     rule.parent.insertBefore(rule, proxy)
   } else if (typeof mixin === 'object') {
-    insertObject(rule, mixin, processMixins)
+    insertObject(rule, mixin)
   } else if (typeof mixin === 'function') {
     let args = [rule].concat(params)
     rule.walkAtRules(atRule => {
-      insertMixin(result, mixins, atRule, processMixins, opts)
+      insertMixin(helpers, mixins, atRule, opts)
     })
     let nodes = mixin(...args)
     if (typeof nodes === 'object') {
-      insertObject(rule, nodes, processMixins)
+      insertObject(rule, nodes)
     }
   } else {
     throw new Error('Wrong ' + name + ' mixin type ' + typeof mixin)
@@ -101,113 +150,47 @@ function insertMixin (result, mixins, rule, processMixins, opts) {
   if (rule.parent) rule.remove()
 }
 
-function defineMixin (result, mixins, rule) {
-  let name = rule.params.split(/\s/, 1)[0]
-  let other = rule.params.slice(name.length).trim()
-
-  let args = []
-  if (other.length) {
-    args = postcss.list.comma(other).map(str => {
-      let arg = str.split(':', 1)[0]
-      let defaults = str.slice(arg.length + 1)
-      return [arg.slice(1).trim(), defaults.trim()]
-    })
-  }
-
-  let content = false
-  rule.walkAtRules('mixin-content', () => {
-    content = true
-    return false
-  })
-
-  mixins[name] = { mixin: rule, args, content }
-  rule.remove()
-}
-
 module.exports = (opts = {}) => {
-  if (typeof opts === 'undefined') opts = {}
-
-  let cwd = process.cwd()
-  let globs = []
-
+  let loadFrom = []
   if (opts.mixinsDir) {
     if (!Array.isArray(opts.mixinsDir)) {
       opts.mixinsDir = [opts.mixinsDir]
     }
-    globs = opts.mixinsDir.map(dir => join(dir, '*.{js,json,css,sss,pcss}'))
+    loadFrom = opts.mixinsDir.map(dir => join(dir, '*.{js,json,css,sss,pcss}'))
   }
-
-  if (opts.mixinsFiles) globs = globs.concat(opts.mixinsFiles)
+  if (opts.mixinsFiles) loadFrom = loadFrom.concat(opts.mixinsFiles)
 
   return {
     postcssPlugin: 'postcss-mixins',
-    prepare (result) {
+
+    prepare () {
       let mixins = {}
 
+      if (typeof opts.mixins === 'object') {
+        for (let i in opts.mixins) {
+          mixins[i] = { mixin: opts.mixins[i] }
+        }
+      }
+
       return {
-        Root (css) {
-          function processMixins (root) {
-            root.walkAtRules(i => {
-              if (i.name === 'mixin' || i.name === 'add-mixin') {
-                if (!insideDefine(i)) {
-                  insertMixin(result, mixins, i, processMixins, opts)
-                }
-              } else if (i.name === 'define-mixin') {
-                defineMixin(result, mixins, i)
-              }
+        Root (root, helpers) {
+          if (loadFrom.length > 0) {
+            return loadGlobalMixin(helpers, loadFrom).then(global => {
+              addGlobalMixins(helpers, mixins, global, opts.parent)
             })
           }
-
-          function process () {
-            if (typeof opts.mixins === 'object') {
-              for (let i in opts.mixins) {
-                mixins[i] = { mixin: opts.mixins[i] }
-              }
-            }
-            processMixins(css)
+        },
+        AtRule: {
+          'define-mixin': (node, helpers) => {
+            addMixin(helpers, mixins, node)
+            node.remove()
+          },
+          'mixin': (node, helpers) => {
+            insertMixin(helpers, mixins, node, opts)
+          },
+          'add-mixin': (node, helpers) => {
+            insertMixin(helpers, mixins, node, opts)
           }
-
-          if (globs.length === 0) {
-            process()
-            return
-          }
-
-          // Windows bug with { nocase: true } due to node-glob issue
-          // https://github.com/isaacs/node-glob/issues/123
-          return globby(globs, { caseSensitiveMatch: IS_WIN })
-            .then(files => {
-              return Promise.all(
-                files.map(async file => {
-                  let ext = extname(file).toLowerCase()
-                  let name = basename(file, extname(file))
-                  let rel = join(cwd, relative(cwd, file))
-                  let parent = ''
-                  if (opts.parent) {
-                    parent = opts.parent
-                  }
-                  result.messages.push({
-                    type: 'dependency',
-                    file: rel,
-                    parent
-                  })
-                  if (ext === '.css' || ext === '.pcss' || ext === '.sss') {
-                    let content = await readFile(rel)
-                    let root
-                    if (ext === '.sss') {
-                      root = sugarss.parse(content, { from: rel })
-                    } else {
-                      root = postcss.parse(content, { from: rel })
-                    }
-                    root.walkAtRules('define-mixin', atrule => {
-                      defineMixin(result, mixins, atrule)
-                    })
-                  } else {
-                    mixins[name] = { mixin: require(rel) }
-                  }
-                })
-              )
-            })
-            .then(process)
         }
       }
     }
