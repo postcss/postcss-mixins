@@ -1,8 +1,8 @@
-# PostCSS Mixins [![Build Status][ci-img]][ci]
+# PostCSS Mixins
 
 <img align="right" width="135" height="95"
      title="Philosopher’s stone, logo of PostCSS"
-     src="http://postcss.github.io/postcss/logo-leftp.svg">
+     src="https://postcss.org/logo-leftp.svg">
 
 [PostCSS] plugin for mixins.
 
@@ -56,18 +56,38 @@ For simple cases you can use [postcss-define-property].
 [postcss-simple-vars]:     https://github.com/postcss/postcss-simple-vars
 [postcss-nested]:          https://github.com/postcss/postcss-nested
 [PostCSS]:                 https://github.com/postcss/postcss
-[ci-img]:                  https://travis-ci.org/postcss/postcss-mixins.svg
-[ci]:                      https://travis-ci.org/postcss/postcss-mixins
+
+<a href="https://evilmartians.com/?utm_source=postcss-mixins">
+  <img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg"
+       alt="Sponsored by Evil Martians" width="236" height="54">
+</a>
+
 
 ## Usage
 
-```js
-postcss([ require('postcss-mixins') ])
+**Step 1:** Install plugin:
+
+```sh
+npm install --save-dev postcss postcss-mixins
 ```
 
-See [PostCSS] docs for examples for your environment.
+**Step 2:** Check you project for existed PostCSS config: `postcss.config.js`
+in the project root, `"postcss"` section in `package.json`
+or `postcss` in bundle config.
 
-[PostCSS API]: https://github.com/postcss/postcss/blob/master/docs/api.md
+If you do not use PostCSS, add it according to [official docs]
+and set this plugin in settings.
+
+**Step 3:** Add the plugin to plugins list:
+
+```diff
+module.exports = {
+  plugins: [
++   require('postcss-mixins'),
+    require('autoprefixer')
+  ]
+}
+```
 
 
 ### CSS Mixin
