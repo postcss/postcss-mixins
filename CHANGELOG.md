@@ -1,6 +1,11 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.0
+* Moved to PostCSS 8.
+* Moved `postcss` to `peerDependencies`.
+* Fix docs (by Frank Showalter).
+
 ## 6.2.3
 * Fix plugin to work with webpack watch (by @Mesqalito).
 
