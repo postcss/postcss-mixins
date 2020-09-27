@@ -173,7 +173,7 @@ module.exports = (opts = {}) => {
       }
 
       return {
-        Root (root, helpers) {
+        Once (root, helpers) {
           if (loadFrom.length > 0) {
             return loadGlobalMixin(helpers, loadFrom).then(global => {
               addGlobalMixins(helpers, mixins, global, opts.parent)
