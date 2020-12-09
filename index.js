@@ -1,7 +1,7 @@
 let { join, basename, extname, relative } = require('path')
 let { promisify } = require('util')
 let { platform } = require('os')
-let jsToCss = require('postcss-js/parser')
+let { parse } = require('postcss-js')
 let sugarss = require('sugarss')
 let globby = require('globby')
 let vars = require('postcss-simple-vars')
@@ -85,7 +85,7 @@ function processMixinContent (rule, from) {
 }
 
 function insertObject (rule, obj) {
-  let root = jsToCss(obj)
+  let root = parse(obj)
   root.each(node => {
     node.source = rule.source
   })
