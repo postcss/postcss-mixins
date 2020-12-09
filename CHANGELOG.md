@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.0.2
+* Fixed `postcss-js` loading (by Paul Welsh).
+
 ## 7.0.1
 * Added funding links.
 

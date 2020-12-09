@@ -1,6 +1,6 @@
 {
   "name": "postcss-mixins",
-  "version": "7.0.1",
+  "version": "7.0.2",
   "description": "PostCSS plugin for mixins",
   "keywords": [
     "postcss",
