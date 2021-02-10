@@ -156,7 +156,9 @@ module.exports = (opts = {}) => {
     if (!Array.isArray(opts.mixinsDir)) {
       opts.mixinsDir = [opts.mixinsDir]
     }
-    loadFrom = opts.mixinsDir.map(dir => join(dir, '*.{js,json,css,sss,pcss}').replace(/\\/g, '/'))
+    loadFrom = opts.mixinsDir.map(dir =>
+      join(dir, '*.{js,json,css,sss,pcss}').replace(/\\/g, '/')
+    )
   }
   if (opts.mixinsFiles) loadFrom = loadFrom.concat(opts.mixinsFiles)
 
