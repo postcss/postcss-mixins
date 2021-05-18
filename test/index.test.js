@@ -3,14 +3,14 @@ let postcss = require('postcss')
 
 let mixins = require('../')
 
-async function run (input, output, opts) {
+async function run(input, output, opts) {
   let result = await postcss([mixins(opts)]).process(input, { from: undefined })
   expect(result.css).toEqual(output)
   expect(result.warnings()).toHaveLength(0)
   return result
 }
 
-async function catchError (fn) {
+async function catchError(fn) {
   let error
   try {
     await fn()
@@ -27,6 +27,14 @@ it('throws error on unknown mixin', async () => {
   )
 })
 
+it('throws error on brackets in mixin', async () => {
+  let error = await catchError(() => run('@define-mixin a $p {}; @mixin a($p)'))
+  expect(error.message).toEqual(
+    'postcss-mixins: <css input>:1:24: Remove brackets from mixin. ' +
+      'Like: @mixin name(1px) → @mixin name 1px'
+  )
+})
+
 it('cans remove unknown mixin on request', async () => {
   await run('@mixin A; a{}', 'a{}', { silent: true })
 })
@@ -34,7 +42,7 @@ it('cans remove unknown mixin on request', async () => {
 it('supports functions mixins', async () => {
   await run('a { @mixin color black; }', 'a { color: black; }', {
     mixins: {
-      color (rule, color) {
+      color(rule, color) {
         rule.replaceWith({ prop: 'color', value: color })
       }
     }
@@ -44,7 +52,7 @@ it('supports functions mixins', async () => {
 it('removes mixin at-rule', async () => {
   await run('a { @mixin none; }', 'a { }', {
     mixins: {
-      none () {}
+      none() {}
     }
   })
 })
@@ -52,7 +60,7 @@ it('removes mixin at-rule', async () => {
 it('converts object from function to nodes', async () => {
   await run('a { @mixin color black; }', 'a { color: black; }', {
     mixins: {
-      color (rule, color) {
+      color(rule, color) {
         return { color }
       }
     }
@@ -62,7 +70,7 @@ it('converts object from function to nodes', async () => {
 it('passes undefined on missed parameters', async () => {
   await run('a { @mixin test; @mixin test  ; }', 'a { }', {
     mixins: {
-      test (rule, param1) {
+      test(rule, param1) {
         expect(param1).not.toBeDefined()
         return {}
       }
@@ -94,14 +102,14 @@ it('supports nested function mixins', async () => {
     'a { color: black; .parent { color: white } }',
     {
       mixins: {
-        parent (mixin) {
+        parent(mixin) {
           let rule = postcss.rule({ selector: '.parent' })
           if (mixin.nodes) {
             rule.append(mixin.nodes)
           }
           mixin.replaceWith(rule)
         },
-        child () {
+        child() {
           return { color: 'white' }
         }
       }
@@ -315,7 +323,7 @@ it('coverts mixins values', async () => {
   let proccessor = postcss(
     mixins({
       mixins: {
-        empty () {
+        empty() {
           return { width: 0 }
         }
       }

@@ -11,7 +11,7 @@ let readFile = promisify(fs.readFile)
 
 let IS_WIN = platform().includes('win32')
 
-function addMixin (helpers, mixins, rule, file) {
+function addMixin(helpers, mixins, rule, file) {
   let name = rule.params.split(/\s/, 1)[0]
   let other = rule.params.slice(name.length).trim()
 
@@ -35,7 +35,7 @@ function addMixin (helpers, mixins, rule, file) {
   rule.remove()
 }
 
-async function loadGlobalMixin (helpers, globs) {
+async function loadGlobalMixin(helpers, globs) {
   let cwd = process.cwd()
   let files = await globby(globs, { caseSensitiveMatch: IS_WIN })
   let mixins = {}
@@ -63,7 +63,7 @@ async function loadGlobalMixin (helpers, globs) {
   return mixins
 }
 
-function addGlobalMixins (helpers, local, global, parent) {
+function addGlobalMixins(helpers, local, global, parent) {
   for (let name in global) {
     helpers.result.messages.push({
       type: 'dependency',
@@ -74,7 +74,7 @@ function addGlobalMixins (helpers, local, global, parent) {
   }
 }
 
-function processMixinContent (rule, from) {
+function processMixinContent(rule, from) {
   rule.walkAtRules('mixin-content', content => {
     if (from.nodes && from.nodes.length > 0) {
       content.replaceWith(from.clone().nodes)
@@ -84,7 +84,7 @@ function processMixinContent (rule, from) {
   })
 }
 
-function insertObject (rule, obj) {
+function insertObject(rule, obj) {
   let root = parse(obj)
   root.each(node => {
     node.source = rule.source
@@ -93,9 +93,15 @@ function insertObject (rule, obj) {
   rule.parent.insertBefore(rule, root)
 }
 
-function insertMixin (helpers, mixins, rule, opts) {
+function insertMixin(helpers, mixins, rule, opts) {
   let name = rule.params.split(/\s/, 1)[0]
   let rest = rule.params.slice(name.length).trim()
+
+  if (name.includes('(')) {
+    throw rule.error(
+      'Remove brackets from mixin. Like: @mixin name(1px) → @mixin name 1px'
+    )
+  }
 
   let params
   if (rest.trim() === '') {
@@ -165,7 +171,7 @@ module.exports = (opts = {}) => {
   return {
     postcssPlugin: 'postcss-mixins',
 
-    prepare () {
+    prepare() {
       let mixins = {}
 
       if (typeof opts.mixins === 'object') {
@@ -175,7 +181,7 @@ module.exports = (opts = {}) => {
       }
 
       return {
-        Once (root, helpers) {
+        Once(root, helpers) {
           if (loadFrom.length > 0) {
             return loadGlobalMixin(helpers, loadFrom).then(global => {
               addGlobalMixins(helpers, mixins, global, opts.parent)
