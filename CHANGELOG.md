@@ -1,6 +1,10 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 8.0
+* Removed Node.js 10 support.
+* Added better error message on `(` in mixin name.
+
 ## 7.0.3
 * Fixed file pattern on Windows (by Gene Alyson Fortunado Torcende).
 
