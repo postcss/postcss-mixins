@@ -10,6 +10,7 @@ let fs = require('fs')
 let readFile = promisify(fs.readFile)
 
 let IS_WIN = platform().includes('win32')
+let MIXINS_GLOB = '*.{js,json,css,sss,pcss}'
 
 function addMixin(helpers, mixins, rule, file) {
   let name = rule.params.split(/\s/, 1)[0]
@@ -71,6 +72,18 @@ function addGlobalMixins(helpers, local, global, parent) {
       parent: parent || ''
     })
     local[name] = global[name]
+  }
+}
+
+function watchNewMixins(helpers, mixinsDirs, glob) {
+  let uniqueDirsPath = Array.from(new Set(mixinsDirs))
+  for (let dir of uniqueDirsPath) {
+    helpers.result.messages.push({
+      type: 'dir-dependency',
+      dir,
+      glob,
+      parent: ''
+    })
   }
 }
 
@@ -163,7 +176,7 @@ module.exports = (opts = {}) => {
       opts.mixinsDir = [opts.mixinsDir]
     }
     loadFrom = opts.mixinsDir.map(dir =>
-      join(dir, '*.{js,json,css,sss,pcss}').replace(/\\/g, '/')
+      join(dir, MIXINS_GLOB).replace(/\\/g, '/')
     )
   }
   if (opts.mixinsFiles) loadFrom = loadFrom.concat(opts.mixinsFiles)
@@ -198,6 +211,11 @@ module.exports = (opts = {}) => {
           },
           'add-mixin': (node, helpers) => {
             insertMixin(helpers, mixins, node, opts)
+          }
+        },
+        OnceExit(_, helpers) {
+          if (opts.mixinsDir && opts.mixinsDir.length > 0) {
+            watchNewMixins(helpers, opts.mixinsDir, MIXINS_GLOB)
           }
         }
       }
