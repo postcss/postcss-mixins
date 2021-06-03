@@ -212,7 +212,7 @@ it('loads mixins from dir', async () => {
     })
   ).toEqual([
     {
-      dir: 'test/mixins',
+      dir: join(__dirname, 'mixins'),
       type: 'dir-dependency',
       parent: ''
     }
@@ -235,7 +235,7 @@ it('loads mixins from dir with parent options', async () => {
     })
   ).toEqual([
     {
-      dir: 'test/mixins',
+      dir: join(__dirname, 'mixins'),
       type: 'dir-dependency',
       parent
     }

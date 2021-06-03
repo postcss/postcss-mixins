@@ -41,7 +41,6 @@ async function loadGlobalMixin(helpers, globs) {
   let mixins = {}
   await Promise.all(
     files.map(async i => {
-      // console.log(i)
       let ext = extname(i).toLowerCase()
       let name = basename(i, extname(i))
       let path = join(cwd, relative(cwd, i))
@@ -65,18 +64,10 @@ async function loadGlobalMixin(helpers, globs) {
 }
 
 function addGlobalMixins(helpers, local, global, parent) {
-  let paths = Object.keys(global).reduce(
-    (acc, mixinName) => [...acc, global[mixinName].file],
-    []
-  )
-  let dirs = Object.keys(
-    paths.reduce((acc, mixinPath) => {
-      acc[dirname(relative(process.cwd(), mixinPath))] = true
-      return acc
-    }, {})
-  )
+  let dirsOfMixins = Object.values(global).map(({ file }) => dirname(file))
+  let uniqueDirsOfMixins = Array.from(new Set(dirsOfMixins))
 
-  dirs.forEach(dirOfMixin => {
+  uniqueDirsOfMixins.forEach(dirOfMixin => {
     helpers.result.messages.push({
       type: 'dir-dependency',
       dir: dirOfMixin,
