@@ -1,4 +1,4 @@
-let { join, basename, extname, relative, dirname } = require('path')
+let { join, basename, extname, relative } = require('path')
 let { promisify } = require('util')
 let { platform } = require('os')
 let { parse } = require('postcss-js')
@@ -10,6 +10,7 @@ let fs = require('fs')
 let readFile = promisify(fs.readFile)
 
 let IS_WIN = platform().includes('win32')
+let MIXINS_GLOB = '*.{js,json,css,sss,pcss}'
 
 function addMixin(helpers, mixins, rule, file) {
   let name = rule.params.split(/\s/, 1)[0]
@@ -64,19 +65,25 @@ async function loadGlobalMixin(helpers, globs) {
 }
 
 function addGlobalMixins(helpers, local, global, parent) {
-  let dirsOfMixins = Object.values(global).map(({ file }) => dirname(file))
-  let uniqueDirsOfMixins = Array.from(new Set(dirsOfMixins))
-
-  uniqueDirsOfMixins.forEach(dirOfMixin => {
+  for (let name in global) {
     helpers.result.messages.push({
-      type: 'dir-dependency',
-      dir: dirOfMixin,
+      type: 'dependency',
+      file: global[name].file,
       parent: parent || ''
     })
-  })
-
-  for (let name in global) {
     local[name] = global[name]
+  }
+}
+
+function watchNewMixins(helpers, mixinsDirs, parent, glob) {
+  let uniqueDirsPath = Array.from(new Set(mixinsDirs))
+  for (let dir of uniqueDirsPath) {
+    helpers.result.messages.push({
+      type: 'dir-dependency',
+      dir,
+      glob,
+      parent: parent || ''
+    })
   }
 }
 
@@ -169,7 +176,7 @@ module.exports = (opts = {}) => {
       opts.mixinsDir = [opts.mixinsDir]
     }
     loadFrom = opts.mixinsDir.map(dir =>
-      join(dir, '*.{js,json,css,sss,pcss}').replace(/\\/g, '/')
+      join(dir, MIXINS_GLOB).replace(/\\/g, '/')
     )
   }
   if (opts.mixinsFiles) loadFrom = loadFrom.concat(opts.mixinsFiles)
@@ -204,6 +211,11 @@ module.exports = (opts = {}) => {
           },
           'add-mixin': (node, helpers) => {
             insertMixin(helpers, mixins, node, opts)
+          }
+        },
+        OnceExit(_, helpers) {
+          if (opts.mixinsDir && opts.mixinsDir.length > 0) {
+            watchNewMixins(helpers, opts.mixinsDir, opts.parent, MIXINS_GLOB)
           }
         }
       }
