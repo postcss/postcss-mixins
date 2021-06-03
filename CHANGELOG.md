@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 8.1
+* Added `dir-dependency` message (by @Eddort).
+
 ## 8.0
 * Removed Node.js 10 support.
 * Added better error message on `(` in mixin name.
