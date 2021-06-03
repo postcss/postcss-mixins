@@ -1,4 +1,4 @@
-let { join, basename, extname, relative } = require('path')
+let { join, basename, extname, relative, dirname } = require('path')
 let { promisify } = require('util')
 let { platform } = require('os')
 let { parse } = require('postcss-js')
@@ -41,6 +41,7 @@ async function loadGlobalMixin(helpers, globs) {
   let mixins = {}
   await Promise.all(
     files.map(async i => {
+      // console.log(i)
       let ext = extname(i).toLowerCase()
       let name = basename(i, extname(i))
       let path = join(cwd, relative(cwd, i))
@@ -64,12 +65,26 @@ async function loadGlobalMixin(helpers, globs) {
 }
 
 function addGlobalMixins(helpers, local, global, parent) {
-  for (let name in global) {
+  let paths = Object.keys(global).reduce(
+    (acc, mixinName) => [...acc, global[mixinName].file],
+    []
+  )
+  let dirs = Object.keys(
+    paths.reduce((acc, mixinPath) => {
+      acc[dirname(relative(process.cwd(), mixinPath))] = true
+      return acc
+    }, {})
+  )
+
+  dirs.forEach(dirOfMixin => {
     helpers.result.messages.push({
-      type: 'dependency',
-      file: global[name].file,
+      type: 'dir-dependency',
+      dir: dirOfMixin,
       parent: parent || ''
     })
+  })
+
+  for (let name in global) {
     local[name] = global[name]
   }
 }

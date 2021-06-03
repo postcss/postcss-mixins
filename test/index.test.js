@@ -212,28 +212,8 @@ it('loads mixins from dir', async () => {
     })
   ).toEqual([
     {
-      file: join(__dirname, 'mixins/a.js'),
-      type: 'dependency',
-      parent: ''
-    },
-    {
-      file: join(__dirname, 'mixins/b.json'),
-      type: 'dependency',
-      parent: ''
-    },
-    {
-      file: join(__dirname, 'mixins/c.CSS'),
-      type: 'dependency',
-      parent: ''
-    },
-    {
-      file: join(__dirname, 'mixins/d.sss'),
-      type: 'dependency',
-      parent: ''
-    },
-    {
-      file: join(__dirname, 'mixins/e.pcss'),
-      type: 'dependency',
+      dir: 'test/mixins',
+      type: 'dir-dependency',
       parent: ''
     }
   ])
@@ -255,28 +235,8 @@ it('loads mixins from dir with parent options', async () => {
     })
   ).toEqual([
     {
-      file: join(__dirname, 'mixins/a.js'),
-      type: 'dependency',
-      parent
-    },
-    {
-      file: join(__dirname, 'mixins/b.json'),
-      type: 'dependency',
-      parent
-    },
-    {
-      file: join(__dirname, 'mixins/c.CSS'),
-      type: 'dependency',
-      parent
-    },
-    {
-      file: join(__dirname, 'mixins/d.sss'),
-      type: 'dependency',
-      parent
-    },
-    {
-      file: join(__dirname, 'mixins/e.pcss'),
-      type: 'dependency',
+      dir: 'test/mixins',
+      type: 'dir-dependency',
       parent
     }
   ])
