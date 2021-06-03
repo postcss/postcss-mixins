@@ -207,9 +207,7 @@ it('loads mixins from dir', async () => {
     }
   )
   expect(
-    result.messages.sort((a, b) => {
-      return a.file?.localeCompare(b.file)
-    })
+    result.messages.sort((a, b) => a.file && a.file.localeCompare(b.file))
   ).toEqual([
     {
       file: join(__dirname, 'mixins/a.js'),

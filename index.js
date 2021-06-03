@@ -9,8 +9,8 @@ let fs = require('fs')
 
 let readFile = promisify(fs.readFile)
 
-let IS_WIN = platform().includes('win32')
 let MIXINS_GLOB = '*.{js,json,css,sss,pcss}'
+let IS_WIN = platform().includes('win32')
 
 function addMixin(helpers, mixins, rule, file) {
   let name = rule.params.split(/\s/, 1)[0]
@@ -75,13 +75,13 @@ function addGlobalMixins(helpers, local, global, parent) {
   }
 }
 
-function watchNewMixins(helpers, mixinsDirs, glob) {
+function watchNewMixins(helpers, mixinsDirs) {
   let uniqueDirsPath = Array.from(new Set(mixinsDirs))
   for (let dir of uniqueDirsPath) {
     helpers.result.messages.push({
       type: 'dir-dependency',
       dir,
-      glob,
+      glob: MIXINS_GLOB,
       parent: ''
     })
   }
@@ -215,7 +215,7 @@ module.exports = (opts = {}) => {
         },
         OnceExit(_, helpers) {
           if (opts.mixinsDir && opts.mixinsDir.length > 0) {
-            watchNewMixins(helpers, opts.mixinsDir, MIXINS_GLOB)
+            watchNewMixins(helpers, opts.mixinsDir)
           }
         }
       }
