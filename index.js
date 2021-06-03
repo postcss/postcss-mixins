@@ -75,14 +75,14 @@ function addGlobalMixins(helpers, local, global, parent) {
   }
 }
 
-function watchNewMixins(helpers, mixinsDirs, parent, glob) {
+function watchNewMixins(helpers, mixinsDirs, glob) {
   let uniqueDirsPath = Array.from(new Set(mixinsDirs))
   for (let dir of uniqueDirsPath) {
     helpers.result.messages.push({
       type: 'dir-dependency',
       dir,
       glob,
-      parent: parent || ''
+      parent: ''
     })
   }
 }
@@ -215,7 +215,7 @@ module.exports = (opts = {}) => {
         },
         OnceExit(_, helpers) {
           if (opts.mixinsDir && opts.mixinsDir.length > 0) {
-            watchNewMixins(helpers, opts.mixinsDir, opts.parent, MIXINS_GLOB)
+            watchNewMixins(helpers, opts.mixinsDir, MIXINS_GLOB)
           }
         }
       }

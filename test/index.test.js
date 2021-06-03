@@ -208,7 +208,7 @@ it('loads mixins from dir', async () => {
   )
   expect(
     result.messages.sort((a, b) => {
-      return a.file.localeCompare(b.file)
+      return a.file?.localeCompare(b.file)
     })
   ).toEqual([
     {
@@ -257,7 +257,7 @@ it('loads mixins from dir with parent options', async () => {
   )
   expect(
     result.messages.sort((a, b) => {
-      return a.file.localeCompare(b.file)
+      return a.file?.localeCompare(b.file)
     })
   ).toEqual([
     {
@@ -288,7 +288,7 @@ it('loads mixins from dir with parent options', async () => {
     {
       dir: join(__dirname, 'mixins'),
       glob: '*.{js,json,css,sss,pcss}',
-      parent,
+      parent: '',
       type: 'dir-dependency'
     }
   ])
