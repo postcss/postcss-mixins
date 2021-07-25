@@ -168,12 +168,12 @@ You can also return an object if you don’t want to create each node manually:
 ```js
 require('postcss-mixins')({
     mixins: {
-        image: function (mixin, path) {
+        image: function (mixin, path, dpi) {
             return {
                 '&': {
                     background: 'url(' + path + ')'
                 },
-                '@media (min-resolution: 120dpi)': {
+                ['@media (min-resolution: '+ dpi +'dpi)']: {
                     '&': {
                         background: 'url(' + path + '@2x)'
                     }
