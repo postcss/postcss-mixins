@@ -45,13 +45,6 @@
     "postcss": "^8.4.4",
     "uvu": "^0.5.2"
   },
-  "c8": {
-    "exclude": [
-      "**/*.test.*"
-    ],
-    "lines": 100,
-    "check-coverage": true
-  },
   "prettier": {
     "arrowParens": "avoid",
     "jsxSingleQuote": false,
@@ -67,5 +60,15 @@
       "node/global-require": "off",
       "consistent-return": "off"
     }
+  },
+  "c8": {
+    "exclude": [
+      "**/*.test.*"
+    ],
+    "lines": 100,
+    "check-coverage": true
+  },
+  "clean-publish": {
+    "cleanDocs": true
   }
 }
