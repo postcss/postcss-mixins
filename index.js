@@ -1,13 +1,10 @@
 let { join, basename, extname, relative } = require('path')
-let { promisify } = require('util')
 let { platform } = require('os')
 let { parse } = require('postcss-js')
 let sugarss = require('sugarss')
 let globby = require('globby')
 let vars = require('postcss-simple-vars')
 let fs = require('fs')
-
-let readFile = promisify(fs.readFile)
 
 let MIXINS_GLOB = '*.{js,json,css,sss,pcss}'
 let IS_WIN = platform().includes('win32')
@@ -36,31 +33,29 @@ function addMixin(helpers, mixins, rule, file) {
   rule.remove()
 }
 
-async function loadGlobalMixin(helpers, globs) {
+function loadGlobalMixin(helpers, globs) {
   let cwd = process.cwd()
-  let files = await globby(globs, { caseSensitiveMatch: IS_WIN })
+  let files = globby.sync(globs, { caseSensitiveMatch: IS_WIN })
   let mixins = {}
-  await Promise.all(
-    files.map(async i => {
-      let ext = extname(i).toLowerCase()
-      let name = basename(i, extname(i))
-      let path = join(cwd, relative(cwd, i))
-      if (ext === '.css' || ext === '.pcss' || ext === '.sss') {
-        let content = await readFile(path)
-        let root
-        if (ext === '.sss') {
-          root = sugarss.parse(content, { from: path })
-        } else {
-          root = helpers.parse(content, { from: path })
-        }
-        root.walkAtRules('define-mixin', atrule => {
-          addMixin(helpers, mixins, atrule, path)
-        })
+  files.forEach(i => {
+    let ext = extname(i).toLowerCase()
+    let name = basename(i, extname(i))
+    let path = join(cwd, relative(cwd, i))
+    if (ext === '.css' || ext === '.pcss' || ext === '.sss') {
+      let content = fs.readFileSync(path)
+      let root
+      if (ext === '.sss') {
+        root = sugarss.parse(content, { from: path })
       } else {
-        mixins[name] = { mixin: require(path), file: path }
+        root = helpers.parse(content, { from: path })
       }
-    })
-  )
+      root.walkAtRules('define-mixin', atrule => {
+        addMixin(helpers, mixins, atrule, path)
+      })
+    } else {
+      mixins[name] = { mixin: require(path), file: path }
+    }
+  })
   return mixins
 }
 
@@ -196,9 +191,10 @@ module.exports = (opts = {}) => {
       return {
         Once(root, helpers) {
           if (loadFrom.length > 0) {
-            return loadGlobalMixin(helpers, loadFrom).then(global => {
+            try {
+              let global = loadGlobalMixin(helpers, loadFrom)
               addGlobalMixins(helpers, mixins, global, opts.parent)
-            })
+            } catch {}
           }
         },
         AtRule: {
