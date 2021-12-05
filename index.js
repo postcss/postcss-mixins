@@ -2,8 +2,8 @@ let { join, basename, extname, relative } = require('path')
 let { platform } = require('os')
 let { parse } = require('postcss-js')
 let sugarss = require('sugarss')
-let globby = require('globby')
 let vars = require('postcss-simple-vars')
+let glob = require('fast-glob')
 let fs = require('fs')
 
 let MIXINS_GLOB = '*.{js,json,css,sss,pcss}'
@@ -35,7 +35,7 @@ function addMixin(helpers, mixins, rule, file) {
 
 function loadGlobalMixin(helpers, globs) {
   let cwd = process.cwd()
-  let files = globby.sync(globs, { caseSensitiveMatch: IS_WIN })
+  let files = glob.sync(globs, { caseSensitiveMatch: IS_WIN })
   let mixins = {}
   files.forEach(i => {
     let ext = extname(i).toLowerCase()
