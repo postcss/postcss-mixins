@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 9.0.1
+* Reduced package size.
+
 ## 9.0
 * Moved to sync APIs (by Charles Suh).
 * Moved from `globby` to `fast-glob` to reduce dependencies.
