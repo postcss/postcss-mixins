@@ -1,10 +1,10 @@
 let { join, basename, extname, relative } = require('path')
+let { readFileSync } = require('fs')
 let { platform } = require('os')
 let { parse } = require('postcss-js')
 let sugarss = require('sugarss')
 let vars = require('postcss-simple-vars')
 let glob = require('fast-glob')
-let fs = require('fs')
 
 let MIXINS_GLOB = '*.{js,json,css,sss,pcss}'
 let IS_WIN = platform().includes('win32')
@@ -42,7 +42,7 @@ function loadGlobalMixin(helpers, globs) {
     let name = basename(i, extname(i))
     let path = join(cwd, relative(cwd, i))
     if (ext === '.css' || ext === '.pcss' || ext === '.sss') {
-      let content = fs.readFileSync(path)
+      let content = readFileSync(path)
       let root
       if (ext === '.sss') {
         root = sugarss.parse(content, { from: path })
