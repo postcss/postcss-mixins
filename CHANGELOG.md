@@ -1,6 +1,10 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 9.0.2
+* Fixed at-rules in `@mixin-content` in function mixins (by Vasily Polovnyov).
+* Updated `postcss-js`.
+
 ## 9.0.1
 * Reduced package size.
 
