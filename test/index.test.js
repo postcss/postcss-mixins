@@ -36,6 +36,17 @@ test('throws error on brackets in mixin', async () => {
   )
 })
 
+test('does not throw error on brackets in at-rules inside function mixins', async () => {
+  await run(
+    '@mixin a { @supports (max(0px)) { color: black; } }',
+    '.a { @supports (max(0px)) { color: black; } }',
+    {
+      mixins: {
+        a() { return { '.a': { '@mixin-content' : {} } } }
+      }
+    })
+})
+
 test('cans remove unknown mixin on request', async () => {
   await run('@mixin A; a{}', 'a{}', { silent: true })
 })
