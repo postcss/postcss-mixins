@@ -151,7 +151,7 @@ function insertMixin(helpers, mixins, rule, opts) {
   } else if (typeof mixin === 'function') {
     let args = [rule].concat(params)
     rule.walkAtRules(atRule => {
-      if (['add-mixin', 'mixin'].includes(atRule.name)) {
+      if (atRule.name === 'add-mixin' || atRule.name === 'mixin') {
         insertMixin(helpers, mixins, atRule, opts)
       }
     })
