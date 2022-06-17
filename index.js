@@ -33,6 +33,19 @@ function addMixin(helpers, mixins, rule, file) {
   rule.remove()
 }
 
+function processModulesForHotReloadRecursively(module, helpers) {
+  let moduleId = module.id
+  module.children.forEach(childModule => {
+    helpers.result.messages.push({
+      type: 'dependency',
+      file: childModule.id,
+      parent: moduleId
+    })
+    processModulesForHotReloadRecursively(childModule, helpers)
+  })
+  delete require.cache[moduleId]
+}
+
 function loadGlobalMixin(helpers, globs) {
   let cwd = process.cwd()
   let files = glob.sync(globs, { caseSensitiveMatch: IS_WIN })
@@ -53,7 +66,13 @@ function loadGlobalMixin(helpers, globs) {
         addMixin(helpers, mixins, atrule, path)
       })
     } else {
-      mixins[name] = { mixin: require(path), file: path }
+      try {
+        mixins[name] = { mixin: require(path), file: path }
+        let module = require.cache[require.resolve(path)]
+        if (module) {
+          processModulesForHotReloadRecursively(module, helpers)
+        }
+      } catch {}
     }
   })
   return mixins
