@@ -341,6 +341,31 @@ test('loads mixins from file globs', async () => {
   })
 })
 
+test('loads mixins with dependencies', async () => {
+  let result = await run(
+    'a { @mixin f; }',
+    'a { g: 5; }',
+    {
+      mixinsFiles: join(__dirname, 'deps', 'f.js')
+    }
+  )
+  equal(
+    result.messages.sort((a, b) => a.file && a.file.localeCompare(b.file)),
+    [
+      {
+        file: join(__dirname, 'deps/f.js'),
+        type: 'dependency',
+        parent: ''
+      },
+      {
+        file: join(__dirname, 'deps/g.js'),
+        type: 'dependency',
+        parent: join(__dirname, 'deps/f.js')
+      }
+    ]
+  )
+})
+
 test('coverts mixins values', async () => {
   let processor = postcss(
     mixins({
