@@ -172,11 +172,10 @@ module.exports = (opts = {}) => {
     if (!Array.isArray(opts.mixinsDir)) {
       opts.mixinsDir = [opts.mixinsDir]
     }
-    loadFrom = opts.mixinsDir.map(dir =>
-      join(dir, MIXINS_GLOB).replace(/\\/g, '/')
-    )
+    loadFrom = opts.mixinsDir.map(dir => join(dir, MIXINS_GLOB))
   }
   if (opts.mixinsFiles) loadFrom = loadFrom.concat(opts.mixinsFiles)
+  loadFrom = loadFrom.map(path => path.replace(/\\/g, '/'))
 
   return {
     postcssPlugin: 'postcss-mixins',
