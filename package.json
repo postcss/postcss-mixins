@@ -29,21 +29,21 @@
   "dependencies": {
     "fast-glob": "^3.2.11",
     "postcss-js": "^4.0.0",
-    "postcss-simple-vars": "^6.0.3",
+    "postcss-simple-vars": "^7.0.0",
     "sugarss": "^4.0.1"
   },
   "devDependencies": {
     "@logux/eslint-config": "^47.2.0",
-    "c8": "^7.11.3",
+    "c8": "^7.12.0",
     "clean-publish": "^4.0.1",
-    "eslint": "^8.18.0",
+    "eslint": "^8.23.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.2.3",
+    "eslint-plugin-n": "^15.2.5",
     "eslint-plugin-prefer-let": "^3.0.1",
-    "eslint-plugin-promise": "^6.0.0",
-    "postcss": "^8.4.14",
-    "uvu": "^0.5.3"
+    "eslint-plugin-promise": "^6.0.1",
+    "postcss": "^8.4.16",
+    "uvu": "^0.5.6"
   },
   "prettier": {
     "arrowParens": "avoid",
