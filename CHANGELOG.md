@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 9.0.4
+* Moved to `postcss-simple-vars` 7.
+
 ## 9.0.3
 * Fixed hot reload (by Andrey Grandilevskiy).
 * Fixed Windows support (by Andrey Grandilevskiy).
