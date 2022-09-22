@@ -218,7 +218,7 @@ require('postcss-mixins')({
 
 ### Mixin Content
 
-`@mixin-context` at-rule will be replaced with mixin `@mixin` children.
+`@mixin-content` at-rule will be replaced with mixin `@mixin` children.
 For exampel, CSS mixins:
 
 ```SCSS
