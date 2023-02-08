@@ -219,7 +219,7 @@ require('postcss-mixins')({
 ### Mixin Content
 
 `@mixin-content` at-rule will be replaced with mixin `@mixin` children.
-For exampel, CSS mixins:
+For example, CSS mixins:
 
 ```SCSS
 @define-mixin isIE {
