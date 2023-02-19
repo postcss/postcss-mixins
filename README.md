@@ -71,7 +71,7 @@ For simple cases you can use [postcss-define-property].
 npm install --save-dev postcss postcss-mixins
 ```
 
-**Step 2:** Check you project for existed PostCSS config: `postcss.config.js`
+**Step 2:** Check your project for existed PostCSS config: `postcss.config.js`
 in the project root, `"postcss"` section in `package.json`
 or `postcss` in bundle config.
 
