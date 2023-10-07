@@ -1,6 +1,6 @@
-let { join, basename, extname, relative } = require('path')
-let { readFileSync } = require('fs')
-let { platform } = require('os')
+let { basename, extname, join, relative } = require('node:path')
+let { readFileSync } = require('node:fs')
+let { platform } = require('node:os')
 let { parse } = require('postcss-js')
 let sugarss = require('sugarss')
 let vars = require('postcss-simple-vars')
@@ -28,7 +28,7 @@ function addMixin(helpers, mixins, rule, file) {
     return false
   })
 
-  mixins[name] = { mixin: rule, args, content }
+  mixins[name] = { args, content, mixin: rule }
   if (file) mixins[name].file = file
   rule.remove()
 }
@@ -37,9 +37,9 @@ function processModulesForHotReloadRecursively(module, helpers) {
   let moduleId = module.id
   module.children.forEach(childModule => {
     helpers.result.messages.push({
-      type: 'dependency',
       file: childModule.id,
-      parent: moduleId
+      parent: moduleId,
+      type: 'dependency'
     })
     processModulesForHotReloadRecursively(childModule, helpers)
   })
@@ -67,7 +67,7 @@ function loadGlobalMixin(helpers, globs) {
       })
     } else {
       try {
-        mixins[name] = { mixin: require(path), file: path }
+        mixins[name] = { file: path, mixin: require(path) }
         let module = require.cache[require.resolve(path)]
         if (module) {
           processModulesForHotReloadRecursively(module, helpers)
@@ -81,9 +81,9 @@ function loadGlobalMixin(helpers, globs) {
 function addGlobalMixins(helpers, local, global, parent) {
   for (let name in global) {
     helpers.result.messages.push({
-      type: 'dependency',
       file: global[name].file,
-      parent: parent || ''
+      parent: parent || '',
+      type: 'dependency'
     })
     local[name] = global[name]
   }
@@ -93,10 +93,10 @@ function watchNewMixins(helpers, mixinsDirs) {
   let uniqueDirsPath = Array.from(new Set(mixinsDirs))
   for (let dir of uniqueDirsPath) {
     helpers.result.messages.push({
-      type: 'dir-dependency',
       dir,
       glob: MIXINS_GLOB,
-      parent: ''
+      parent: '',
+      type: 'dir-dependency'
     })
   }
 }
@@ -209,24 +209,24 @@ module.exports = (opts = {}) => {
       }
 
       return {
-        Once(root, helpers) {
-          if (loadFrom.length > 0) {
-            try {
-              let global = loadGlobalMixin(helpers, loadFrom)
-              addGlobalMixins(helpers, mixins, global, opts.parent)
-            } catch {}
-          }
-        },
         AtRule: {
+          'add-mixin': (node, helpers) => {
+            insertMixin(helpers, mixins, node, opts)
+          },
           'define-mixin': (node, helpers) => {
             addMixin(helpers, mixins, node)
             node.remove()
           },
           'mixin': (node, helpers) => {
             insertMixin(helpers, mixins, node, opts)
-          },
-          'add-mixin': (node, helpers) => {
-            insertMixin(helpers, mixins, node, opts)
+          }
+        },
+        Once(root, helpers) {
+          if (loadFrom.length > 0) {
+            try {
+              let global = loadGlobalMixin(helpers, loadFrom)
+              addGlobalMixins(helpers, mixins, global, opts.parent)
+            } catch {}
           }
         },
         OnceExit(_, helpers) {

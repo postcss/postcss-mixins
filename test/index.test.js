@@ -1,6 +1,6 @@
 let { equal, type } = require('uvu/assert')
 let { test } = require('uvu')
-let { join } = require('path')
+let { join } = require('node:path')
 let postcss = require('postcss')
 
 let mixins = require('../')
@@ -114,15 +114,15 @@ test('supports nested function mixins', async () => {
     'a { color: black; .parent { color: white } }',
     {
       mixins: {
+        child() {
+          return { color: 'white' }
+        },
         parent(mixin) {
           let rule = postcss.rule({ selector: '.parent' })
           if (mixin.nodes) {
             rule.append(mixin.nodes)
           }
           mixin.replaceWith(rule)
-        },
-        child() {
-          return { color: 'white' }
         }
       }
     }
@@ -223,28 +223,28 @@ test('loads mixins from dir', async () => {
     [
       {
         file: join(__dirname, 'mixins/a.js'),
-        type: 'dependency',
-        parent: ''
+        parent: '',
+        type: 'dependency'
       },
       {
         file: join(__dirname, 'mixins/b.json'),
-        type: 'dependency',
-        parent: ''
+        parent: '',
+        type: 'dependency'
       },
       {
         file: join(__dirname, 'mixins/c.CSS'),
-        type: 'dependency',
-        parent: ''
+        parent: '',
+        type: 'dependency'
       },
       {
         file: join(__dirname, 'mixins/d.sss'),
-        type: 'dependency',
-        parent: ''
+        parent: '',
+        type: 'dependency'
       },
       {
         file: join(__dirname, 'mixins/e.pcss'),
-        type: 'dependency',
-        parent: ''
+        parent: '',
+        type: 'dependency'
       },
       {
         dir: join(__dirname, 'mixins'),
@@ -271,28 +271,28 @@ test('loads mixins from dir with parent options', async () => {
     [
       {
         file: join(__dirname, 'mixins/a.js'),
-        type: 'dependency',
-        parent
+        parent,
+        type: 'dependency'
       },
       {
         file: join(__dirname, 'mixins/b.json'),
-        type: 'dependency',
-        parent
+        parent,
+        type: 'dependency'
       },
       {
         file: join(__dirname, 'mixins/c.CSS'),
-        type: 'dependency',
-        parent
+        parent,
+        type: 'dependency'
       },
       {
         file: join(__dirname, 'mixins/d.sss'),
-        type: 'dependency',
-        parent
+        parent,
+        type: 'dependency'
       },
       {
         file: join(__dirname, 'mixins/e.pcss'),
-        type: 'dependency',
-        parent
+        parent,
+        type: 'dependency'
       },
       {
         dir: join(__dirname, 'mixins'),
@@ -354,13 +354,13 @@ test('loads mixins with dependencies', async () => {
     [
       {
         file: join(__dirname, 'deps/f.js'),
-        type: 'dependency',
-        parent: ''
+        parent: '',
+        type: 'dependency'
       },
       {
         file: join(__dirname, 'deps/g.js'),
-        type: 'dependency',
-        parent: join(__dirname, 'deps/f.js')
+        parent: join(__dirname, 'deps/f.js'),
+        type: 'dependency'
       }
     ]
   )
