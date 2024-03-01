@@ -209,16 +209,16 @@ module.exports = (opts = {}) => {
       }
 
       return {
-        AtRule: {
-          'add-mixin': (node, helpers) => {
-            insertMixin(helpers, mixins, node, opts)
-          },
-          'define-mixin': (node, helpers) => {
-            addMixin(helpers, mixins, node)
-            node.remove()
-          },
-          'mixin': (node, helpers) => {
-            insertMixin(helpers, mixins, node, opts)
+        AtRule(node, helpers) {
+          switch (node.name) {
+            case 'define-mixin':
+              addMixin(helpers, mixins, node)
+              node.remove()
+              break
+            case 'add-mixin':
+            case 'mixin':
+              insertMixin(helpers, mixins, node, opts)
+              break
           }
         },
         Once(root, helpers) {

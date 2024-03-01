@@ -3,6 +3,8 @@ let { test } = require('uvu')
 let { join } = require('node:path')
 let postcss = require('postcss')
 
+let atRulePlugin = require('./utils/atRulePlugin')
+
 let mixins = require('../')
 
 async function run(input, output, opts) {
@@ -425,6 +427,42 @@ test('works in sync mode on no option', () => {
 
 test('has @add-mixin alias', async () => {
   await run('@define-mixin a { a: 1 } @add-mixin a', 'a: 1')
+})
+
+test('runs after plugin declared earlier', async () => {
+  let result = await postcss([
+    atRulePlugin({
+      from: '$p',
+      to: '1, 2'
+    }),
+    mixins({
+      mixins: {
+        a(_, x, y) {
+          return { x, y }
+        }
+      }
+    })
+  ]).process('@mixin a $p, 3', { from: undefined })
+  equal(result.css, 'x: 1;\ny: 2')
+  equal(result.warnings().length, 0)
+})
+
+test('runs before plugin declared later', async () => {
+  let result = await postcss([
+    mixins({
+      mixins: {
+        a(_, x, y) {
+          return { x, y }
+        }
+      }
+    }),
+    atRulePlugin({
+      from: '$p',
+      to: '1, 2'
+    }),
+  ]).process('@mixin a $p, 3', { from: undefined })
+  equal(result.css, 'x: $p;\ny: 3')
+  equal(result.warnings().length, 0)
 })
 
 test.run()
