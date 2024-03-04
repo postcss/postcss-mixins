@@ -10,7 +10,7 @@
     "sass"
   ],
   "scripts": {
-    "unit": "uvu . '\\.test\\.js$'",
+    "unit": "node --test test/index.test.js",
     "test:coverage": "c8 pnpm unit",
     "test:lint": "eslint .",
     "test": "pnpm run /^test:/"
@@ -45,8 +45,7 @@
     "c8": "^9.1.0",
     "clean-publish": "^4.3.0",
     "eslint": "^8.57.0",
-    "postcss": "^8.4.35",
-    "uvu": "^0.5.6"
+    "postcss": "^8.4.35"
   },
   "prettier": {
     "arrowParens": "avoid",

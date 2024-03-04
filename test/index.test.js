@@ -1,5 +1,5 @@
-let { equal, type } = require('uvu/assert')
-let { test } = require('uvu')
+let { deepStrictEqual, equal } = require('node:assert')
+let { test } = require('node:test')
 let { join } = require('node:path')
 let postcss = require('postcss')
 
@@ -86,7 +86,7 @@ test('passes undefined on missed parameters', async () => {
   await run('a { @mixin test; @mixin test  ; }', 'a { }', {
     mixins: {
       test(rule, param1) {
-        type(param1, 'undefined')
+        equal(typeof param1, 'undefined')
         return {}
       }
     }
@@ -221,7 +221,7 @@ test('loads mixins from dir', async () => {
       mixinsDir: join(__dirname, 'mixins')
     }
   )
-  equal(
+  deepStrictEqual(
     result.messages.sort((a, b) => a.file && a.file.localeCompare(b.file)),
     [
       {
@@ -269,7 +269,7 @@ test('loads mixins from dir with parent options', async () => {
       parent: join(__dirname, 'a.js')
     }
   )
-  equal(
+  deepStrictEqual(
     result.messages.sort((a, b) => a.file && a.file.localeCompare(b.file)),
     [
       {
@@ -348,7 +348,7 @@ test('loads mixins with dependencies', async () => {
   let result = await run('a { @mixin f; }', 'a { g: 5; }', {
     mixinsFiles: join(__dirname, 'deps', 'f.js')
   })
-  equal(
+  deepStrictEqual(
     result.messages.sort((a, b) => a.file && a.file.localeCompare(b.file)),
     [
       {
@@ -376,7 +376,7 @@ test('coverts mixins values', async () => {
     })
   )
   let result = await processor.process('a{ @mixin empty; }', { from: 'a.css' })
-  type(result.root.first.first.value, 'string')
+  equal(typeof result.root.first.first.value, 'string')
 })
 
 test('supports nested mixins', async () => {
@@ -518,5 +518,3 @@ test('passes single-arg to the nested function mixin', async () => {
     }
   })
 })
-
-test.run()
