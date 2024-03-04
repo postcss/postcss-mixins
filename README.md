@@ -257,6 +257,21 @@ could be used like this:
 .isIE .foo { color: red; }
 ```
 
+### Comma-separated CSS values
+
+In order to pass a comma-separated value as a argument to a mixin, you can use
+the special `asSingleArg` keyword. For example:
+
+```css
+@define-mixin transition $properties, $duration {
+  transition-property: $properties;
+  transition-duration: $duration;
+}
+
+.foo {
+    @mixin transition asSingleArg(color, background-color), 0.5s;
+}
+```
 
 ### Migration from Sass
 
