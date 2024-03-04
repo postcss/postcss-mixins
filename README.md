@@ -259,7 +259,7 @@ could be used like this:
 
 ### Mixin parameters with comma
 
-In order to pass a comma-separated value as a argument to a mixin, you can use
+In order to pass a comma-separated value as an argument to a mixin, you can use
 the special `single-arg` keyword. For example:
 
 ```css
