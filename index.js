@@ -128,7 +128,7 @@ function unwrapSingleArguments(rules, singleArgumentsMap) {
 
   for (let rule of rules) {
     if (rule.type === 'decl') {
-      if (rule.value.includes('asSingleArg')) {
+      if (rule.value.includes('single-arg')) {
         let newValue = rule.value
         for (let [key, value] of singleArgumentsMap) {
           newValue = newValue.replace(key, value)
@@ -142,11 +142,11 @@ function unwrapSingleArguments(rules, singleArgumentsMap) {
 }
 
 function resolveSingleArgumentValue(value, parentNode) {
-  let content = value.slice('asSingleArg'.length).trim()
+  let content = value.slice('single-arg'.length).trim()
 
   if (!content.startsWith('(') || !content.endsWith(')')) {
     throw parentNode.error(
-      'Content of asSingleArg must be wrapped in brackets: ' + value
+      'Content of single-arg must be wrapped in brackets: ' + value
     )
   }
 
@@ -174,7 +174,7 @@ function insertMixin(helpers, mixins, rule, opts) {
   let mixin = meta && meta.mixin
   let singleArgumentsMap = new Map(
     params
-      .filter(param => param.startsWith('asSingleArg'))
+      .filter(param => param.startsWith('single-arg'))
       .map(param => [param, resolveSingleArgumentValue(param, rule)])
   )
 

@@ -426,88 +426,88 @@ test('has @add-mixin alias', async () => {
   await run('@define-mixin a { a: 1 } @add-mixin a', 'a: 1')
 })
 
-test('treats asSingleArg content as a single argument', async () => {
+test('treats single-arg content as a single argument', async () => {
   await run(
     '@define-mixin a $x, $y { a: $x; b: $y; } ' +
-      '@mixin a asSingleArg(1, 2), 3;',
+      '@mixin a single-arg(1, 2), 3;',
     'a: 1, 2;\nb: 3;'
   )
 })
 
-test('throws error when asSingleArg does not have start parenthesis', async () => {
+test('throws error when single-arg does not have start parenthesis', async () => {
   let error = await catchError(() =>
-    run('@define-mixin a $p {}; @mixin a asSingleArg 1, 2);')
+    run('@define-mixin a $p {}; @mixin a single-arg 1, 2);')
   )
 
   equal(
     error.message,
     'postcss-mixins: <css input>:1:24: ' +
-      'Content of asSingleArg must be wrapped in brackets: asSingleArg 1'
+      'Content of single-arg must be wrapped in brackets: single-arg 1'
   )
 })
 
-test('throws error when asSingleArg does not have end parenthesis', async () => {
+test('throws error when single-arg does not have end parenthesis', async () => {
   let error = await catchError(() =>
-    run('@define-mixin a $p {}; @mixin a asSingleArg(1, 2;')
+    run('@define-mixin a $p {}; @mixin a single-arg(1, 2;')
   )
 
   equal(
     error.message,
     'postcss-mixins: <css input>:1:24: ' +
-      'Content of asSingleArg must be wrapped in brackets: asSingleArg(1, 2;'
+      'Content of single-arg must be wrapped in brackets: single-arg(1, 2;'
   )
 })
 
-test('ignores whitespaces outside of asSingleArg parentheses', async () => {
+test('ignores whitespaces outside of single-arg parentheses', async () => {
   await run(
     '@define-mixin a $x, $y { a: $x; b: $y; } ' +
-      '@mixin a asSingleArg   (1, 2)   , 3;',
+      '@mixin a single-arg   (1, 2)   , 3;',
     'a: 1, 2;\nb: 3;'
   )
 })
 
-test('can replace multiple asSingleArg contents', async () => {
+test('can replace multiple single-arg contents', async () => {
   await run(
     '@define-mixin a $x, $y { a: $x; b: $y; } ' +
-      '@mixin a asSingleArg(1, 2), asSingleArg(3, 4);',
+      '@mixin a single-arg(1, 2), single-arg(3, 4);',
     'a: 1, 2;\nb: 3, 4;'
   )
 })
 
-test('can replace multiple asSingleArg contents inside single declaration', async () => {
+test('can replace multiple single-arg contents inside single declaration', async () => {
   await run(
     '@define-mixin a $x, $y { a: $x, $y; } ' +
-      '@mixin a asSingleArg(1, 2), asSingleArg(3, 4);',
+      '@mixin a single-arg(1, 2), single-arg(3, 4);',
     'a: 1, 2, 3, 4;'
   )
 })
 
-test('can replace asSingleArg contents with nested parentheses', async () => {
+test('can replace single-arg contents with nested parentheses', async () => {
   await run(
-    '@define-mixin a $x { a: $x } ' + '@mixin a asSingleArg(1, (2), 3);',
+    '@define-mixin a $x { a: $x } ' + '@mixin a single-arg(1, (2), 3);',
     'a: 1, (2), 3;'
   )
 })
 
-test('handles asSingleArg inside rules', async () => {
+test('handles single-arg inside rules', async () => {
   await run(
     '@define-mixin a $x, $y { .s { a: $x; b: $y; } } ' +
-      '@mixin a asSingleArg(1, 2), 3;',
+      '@mixin a single-arg(1, 2), 3;',
     '.s { a: 1, 2; b: 3; }'
   )
 })
 
-test('passes asSingleArg to the nested mixin', async () => {
+test('passes single-arg to the nested mixin', async () => {
   await run(
     '@define-mixin a $p { a: $p; } ' +
       '@define-mixin b $x, $y { @mixin a $x; b: $y; } ' +
-      '@mixin b asSingleArg(1, 2), 3;',
+      '@mixin b single-arg(1, 2), 3;',
     'a: 1, 2;\nb: 3;'
   )
 })
 
-test('passes asSingleArg to the nested function mixin', async () => {
-  await run('@mixin b asSingleArg(1, 2), 3;', 'a: 1, 2;\nb: 3;', {
+test('passes single-arg to the nested function mixin', async () => {
+  await run('@mixin b single-arg(1, 2), 3;', 'a: 1, 2;\nb: 3;', {
     mixins: {
       a(rule, p) {
         return { a: p }
