@@ -257,7 +257,7 @@ could be used like this:
 .isIE .foo { color: red; }
 ```
 
-### Comma-separated CSS values
+### Mixin parameters with comma
 
 In order to pass a comma-separated value as a argument to a mixin, you can use
 the special `asSingleArg` keyword. For example:
@@ -269,7 +269,7 @@ the special `asSingleArg` keyword. For example:
 }
 
 .foo {
-    @mixin transition asSingleArg(color, background-color), 0.5s;
+  @mixin transition asSingleArg(color, background-color), 0.5s;
 }
 ```
 

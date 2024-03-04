@@ -8,7 +8,6 @@ let glob = require('fast-glob')
 
 let MIXINS_GLOB = '*.{js,json,css,sss,pcss}'
 let IS_WIN = platform().includes('win32')
-let SINGLE_ARGUMENT_KEYWORD = 'asSingleArg'
 
 function addMixin(helpers, mixins, rule, file) {
   let name = rule.params.split(/\s/, 1)[0]
@@ -128,34 +127,26 @@ function unwrapSingleArguments(rules, singleArgumentsMap) {
   }
 
   for (let rule of rules) {
-    switch (rule.type) {
-      case 'decl':
-        if (rule.value.includes(SINGLE_ARGUMENT_KEYWORD)) {
-          let newValue = rule.value
-          for (let [key, value] of singleArgumentsMap) {
-            newValue = newValue.replace(key, value)
-          }
-          rule.value = newValue
+    if (rule.type === 'decl') {
+      if (rule.value.includes('asSingleArg')) {
+        let newValue = rule.value
+        for (let [key, value] of singleArgumentsMap) {
+          newValue = newValue.replace(key, value)
         }
-        break
-      case 'rule':
-        unwrapSingleArguments(rule.nodes, singleArgumentsMap)
-        break
-      default:
-        break
+        rule.value = newValue
+      }
+    } else if (rule.type === 'rule') {
+      unwrapSingleArguments(rule.nodes, singleArgumentsMap)
     }
   }
 }
 
 function resolveSingleArgumentValue(value) {
-  let content = value.slice(SINGLE_ARGUMENT_KEYWORD.length).trim()
+  let content = value.slice('asSingleArg'.length).trim()
 
   if (!content.startsWith('(') || !content.endsWith(')')) {
     throw new Error(
-      'Content of ' +
-        SINGLE_ARGUMENT_KEYWORD +
-        ' must be wrapped in brackets: ' +
-        value
+      'Content of asSingleArg must be wrapped in brackets: ' + value
     )
   }
 
@@ -183,7 +174,7 @@ function insertMixin(helpers, mixins, rule, opts) {
   let mixin = meta && meta.mixin
   let singleArgumentsMap = new Map(
     params
-      .filter(param => param.startsWith(SINGLE_ARGUMENT_KEYWORD))
+      .filter(param => param.startsWith('asSingleArg'))
       .map(param => [param, resolveSingleArgumentValue(param)])
   )
 
