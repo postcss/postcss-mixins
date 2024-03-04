@@ -111,13 +111,46 @@ function processMixinContent(rule, from) {
   })
 }
 
-function insertObject(rule, obj) {
+function insertObject(rule, obj, singeArgumentsMap) {
   let root = parse(obj)
   root.each(node => {
     node.source = rule.source
   })
   processMixinContent(root, rule)
+  unwrapSingleArguments(root.nodes, singeArgumentsMap)
   rule.parent.insertBefore(rule, root)
+}
+
+function unwrapSingleArguments(rules, singleArgumentsMap) {
+  if (singleArgumentsMap.size <= 0) {
+    return
+  }
+
+  for (let rule of rules) {
+    if (rule.type === 'decl') {
+      if (rule.value.includes('single-arg')) {
+        let newValue = rule.value
+        for (let [key, value] of singleArgumentsMap) {
+          newValue = newValue.replace(key, value)
+        }
+        rule.value = newValue
+      }
+    } else if (rule.type === 'rule') {
+      unwrapSingleArguments(rule.nodes, singleArgumentsMap)
+    }
+  }
+}
+
+function resolveSingleArgumentValue(value, parentNode) {
+  let content = value.slice('single-arg'.length).trim()
+
+  if (!content.startsWith('(') || !content.endsWith(')')) {
+    throw parentNode.error(
+      'Content of single-arg must be wrapped in brackets: ' + value
+    )
+  }
+
+  return content.slice(1, -1)
 }
 
 function insertMixin(helpers, mixins, rule, opts) {
@@ -139,6 +172,11 @@ function insertMixin(helpers, mixins, rule, opts) {
 
   let meta = mixins[name]
   let mixin = meta && meta.mixin
+  let singleArgumentsMap = new Map(
+    params
+      .filter(param => param.startsWith('single-arg'))
+      .map(param => [param, resolveSingleArgumentValue(param, rule)])
+  )
 
   if (!meta) {
     if (!opts.silent) {
@@ -164,9 +202,11 @@ function insertMixin(helpers, mixins, rule, opts) {
 
     if (meta.content) processMixinContent(proxy, rule)
 
+    unwrapSingleArguments(proxy.nodes, singleArgumentsMap)
+
     rule.parent.insertBefore(rule, proxy)
   } else if (typeof mixin === 'object') {
-    insertObject(rule, mixin)
+    insertObject(rule, mixin, singleArgumentsMap)
   } else if (typeof mixin === 'function') {
     let args = [rule].concat(params)
     rule.walkAtRules(atRule => {
@@ -176,7 +216,7 @@ function insertMixin(helpers, mixins, rule, opts) {
     })
     let nodes = mixin(...args)
     if (typeof nodes === 'object') {
-      insertObject(rule, nodes)
+      insertObject(rule, nodes, singleArgumentsMap)
     }
   } else {
     throw new Error('Wrong ' + name + ' mixin type ' + typeof mixin)
