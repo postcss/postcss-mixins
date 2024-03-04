@@ -8,6 +8,7 @@ let glob = require('fast-glob')
 
 let MIXINS_GLOB = '*.{js,json,css,sss,pcss}'
 let IS_WIN = platform().includes('win32')
+let SINGLE_ARGUMENT_KEYWORD = 'asSingleArg'
 
 function addMixin(helpers, mixins, rule, file) {
   let name = rule.params.split(/\s/, 1)[0]
@@ -111,13 +112,54 @@ function processMixinContent(rule, from) {
   })
 }
 
-function insertObject(rule, obj) {
+function insertObject(rule, obj, singeArgumentsMap) {
   let root = parse(obj)
   root.each(node => {
     node.source = rule.source
   })
   processMixinContent(root, rule)
+  unwrapSingleArguments(root.nodes, singeArgumentsMap)
   rule.parent.insertBefore(rule, root)
+}
+
+function unwrapSingleArguments(rules, singleArgumentsMap) {
+  if (singleArgumentsMap.size <= 0) {
+    return
+  }
+
+  for (let rule of rules) {
+    switch (rule.type) {
+      case 'decl':
+        if (rule.value.includes(SINGLE_ARGUMENT_KEYWORD)) {
+          let newValue = rule.value
+          for (let [key, value] of singleArgumentsMap) {
+            newValue = newValue.replace(key, value)
+          }
+          rule.value = newValue
+        }
+        break
+      case 'rule':
+        unwrapSingleArguments(rule.nodes, singleArgumentsMap)
+        break
+      default:
+        break
+    }
+  }
+}
+
+function resolveSingleArgumentValue(value) {
+  let content = value.slice(SINGLE_ARGUMENT_KEYWORD.length).trim()
+
+  if (!content.startsWith('(') || !content.endsWith(')')) {
+    throw new Error(
+      'Content of ' +
+        SINGLE_ARGUMENT_KEYWORD +
+        ' must be wrapped in brackets: ' +
+        value
+    )
+  }
+
+  return content.slice(1, -1)
 }
 
 function insertMixin(helpers, mixins, rule, opts) {
@@ -139,6 +181,11 @@ function insertMixin(helpers, mixins, rule, opts) {
 
   let meta = mixins[name]
   let mixin = meta && meta.mixin
+  let singleArgumentsMap = new Map(
+    params
+      .filter(param => param.startsWith(SINGLE_ARGUMENT_KEYWORD))
+      .map(param => [param, resolveSingleArgumentValue(param)])
+  )
 
   if (!meta) {
     if (!opts.silent) {
@@ -164,9 +211,11 @@ function insertMixin(helpers, mixins, rule, opts) {
 
     if (meta.content) processMixinContent(proxy, rule)
 
+    unwrapSingleArguments(proxy.nodes, singleArgumentsMap)
+
     rule.parent.insertBefore(rule, proxy)
   } else if (typeof mixin === 'object') {
-    insertObject(rule, mixin)
+    insertObject(rule, mixin, singleArgumentsMap)
   } else if (typeof mixin === 'function') {
     let args = [rule].concat(params)
     rule.walkAtRules(atRule => {
@@ -176,7 +225,7 @@ function insertMixin(helpers, mixins, rule, opts) {
     })
     let nodes = mixin(...args)
     if (typeof nodes === 'object') {
-      insertObject(rule, nodes)
+      insertObject(rule, nodes, singleArgumentsMap)
     }
   } else {
     throw new Error('Wrong ' + name + ' mixin type ' + typeof mixin)
