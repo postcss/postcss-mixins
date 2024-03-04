@@ -141,11 +141,11 @@ function unwrapSingleArguments(rules, singleArgumentsMap) {
   }
 }
 
-function resolveSingleArgumentValue(value) {
+function resolveSingleArgumentValue(value, parentNode) {
   let content = value.slice('asSingleArg'.length).trim()
 
   if (!content.startsWith('(') || !content.endsWith(')')) {
-    throw new Error(
+    throw parentNode.error(
       'Content of asSingleArg must be wrapped in brackets: ' + value
     )
   }
@@ -175,7 +175,7 @@ function insertMixin(helpers, mixins, rule, opts) {
   let singleArgumentsMap = new Map(
     params
       .filter(param => param.startsWith('asSingleArg'))
-      .map(param => [param, resolveSingleArgumentValue(param)])
+      .map(param => [param, resolveSingleArgumentValue(param, rule)])
   )
 
   if (!meta) {

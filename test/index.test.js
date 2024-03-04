@@ -441,7 +441,8 @@ test('throws error when asSingleArg does not have start parenthesis', async () =
 
   equal(
     error.message,
-    'Content of asSingleArg must be wrapped in brackets: asSingleArg 1'
+    'postcss-mixins: <css input>:1:24: ' +
+      'Content of asSingleArg must be wrapped in brackets: asSingleArg 1'
   )
 })
 
@@ -452,7 +453,8 @@ test('throws error when asSingleArg does not have end parenthesis', async () => 
 
   equal(
     error.message,
-    'Content of asSingleArg must be wrapped in brackets: asSingleArg(1, 2;'
+    'postcss-mixins: <css input>:1:24: ' +
+      'Content of asSingleArg must be wrapped in brackets: asSingleArg(1, 2;'
   )
 })
 
