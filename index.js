@@ -6,7 +6,7 @@ let sugarss = require('sugarss')
 let vars = require('postcss-simple-vars')
 let glob = require('fast-glob')
 
-let MIXINS_GLOB = '*.{js,json,css,sss,pcss}'
+let MIXINS_GLOB = '*.{js,cjs,json,css,sss,pcss}'
 let IS_WIN = platform().includes('win32')
 
 function addMixin(helpers, mixins, rule, file) {
