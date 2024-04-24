@@ -41,11 +41,11 @@
     "sugarss": "^4.0.1"
   },
   "devDependencies": {
-    "@logux/eslint-config": "^53.0.0",
+    "@logux/eslint-config": "^53.0.1",
     "c8": "^9.1.0",
-    "clean-publish": "^4.3.0",
+    "clean-publish": "^4.4.0",
     "eslint": "^8.57.0",
-    "postcss": "^8.4.35"
+    "postcss": "^8.4.38"
   },
   "prettier": {
     "arrowParens": "avoid",
