@@ -1,6 +1,10 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 10.0.1
+* Fixed `.cjs` mixin support (by @pridyok).
+* Fixed `.mjs` mixin support.
+
 ## 10.0.0
 * Added `single-arg()` support (by @pciarach).
 * Removed Node.js 16 and 14 support.
