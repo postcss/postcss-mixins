@@ -251,7 +251,7 @@ test('loads mixins from dir', async () => {
       },
       {
         dir: join(__dirname, 'mixins'),
-        glob: '*.{js,json,css,sss,pcss}',
+        glob: '*.{js,cjs,json,css,sss,pcss}',
         parent: '',
         type: 'dir-dependency'
       }
@@ -299,7 +299,7 @@ test('loads mixins from dir with parent options', async () => {
       },
       {
         dir: join(__dirname, 'mixins'),
-        glob: '*.{js,json,css,sss,pcss}',
+        glob: '*.{js,cjs,json,css,sss,pcss}',
         parent: '',
         type: 'dir-dependency'
       }
