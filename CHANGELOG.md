@@ -1,6 +1,10 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 11.0.0
+* Replaced `fast-glob` to `tinyglobby` to reduce dependencies (by @ziebam).
+* Moved to case-insensitive `mixinsFiles` (by @ziebam).
+
 ## 10.0.1
 * Fixed `.cjs` mixin support (by @pridyok).
 * Fixed `.mjs` mixin support.
