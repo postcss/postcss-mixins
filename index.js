@@ -1,9 +1,9 @@
-let { globSync } = require('tinyglobby')
 let { readFileSync } = require('node:fs')
 let { basename, extname, join, relative } = require('node:path')
 let { parse } = require('postcss-js')
 let vars = require('postcss-simple-vars')
 let sugarss = require('sugarss')
+let { globSync } = require('tinyglobby')
 
 let MIXINS_GLOB = '*.{js,cjs,mjs,json,css,sss,pcss}'
 
