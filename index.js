@@ -1,10 +1,10 @@
-let { basename, extname, join, relative } = require('node:path')
+let glob = require('fast-glob')
 let { readFileSync } = require('node:fs')
 let { platform } = require('node:os')
+let { basename, extname, join, relative } = require('node:path')
 let { parse } = require('postcss-js')
-let sugarss = require('sugarss')
 let vars = require('postcss-simple-vars')
-let glob = require('fast-glob')
+let sugarss = require('sugarss')
 
 let MIXINS_GLOB = '*.{js,cjs,mjs,json,css,sss,pcss}'
 let IS_WIN = platform().includes('win32')

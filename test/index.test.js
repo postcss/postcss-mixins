@@ -1,6 +1,6 @@
 let { deepStrictEqual, equal } = require('node:assert')
-let { test } = require('node:test')
 let { join } = require('node:path')
+let { test } = require('node:test')
 let postcss = require('postcss')
 
 let mixins = require('../')
