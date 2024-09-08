@@ -1,5 +1,4 @@
 let { readFileSync } = require('node:fs')
-let { platform } = require('node:os')
 let { basename, extname, join, relative } = require('node:path')
 let { parse } = require('postcss-js')
 let vars = require('postcss-simple-vars')
@@ -7,7 +6,6 @@ let sugarss = require('sugarss')
 let { globSync } = require('tinyglobby')
 
 let MIXINS_GLOB = '*.{js,cjs,mjs,json,css,sss,pcss}'
-let IS_WIN = platform().includes('win32')
 
 function addMixin(helpers, mixins, rule, file) {
   let name = rule.params.split(/\s/, 1)[0]
@@ -48,7 +46,7 @@ function processModulesForHotReloadRecursively(module, helpers) {
 
 function loadGlobalMixin(helpers, globs) {
   let cwd = process.cwd()
-  let files = globSync(globs, { caseSensitiveMatch: !IS_WIN })
+  let files = globSync(globs, { caseSensitiveMatch: false })
   let mixins = {}
   files.forEach(i => {
     let ext = extname(i).toLowerCase()
