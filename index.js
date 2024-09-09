@@ -46,7 +46,10 @@ function processModulesForHotReloadRecursively(module, helpers) {
 
 function loadGlobalMixin(helpers, globs) {
   let cwd = process.cwd()
-  let files = globSync(globs, { caseSensitiveMatch: false })
+  let files = globSync(globs, {
+    caseSensitiveMatch: false,
+    expandDirectories: false
+  })
   let mixins = {}
   files.forEach(i => {
     let ext = extname(i).toLowerCase()
