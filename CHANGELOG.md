@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 11.0.2
+* Fixed glob pattern performance (by @SuperchupuDev).
+
 ## 11.0.1
 * Fixed compatibility with `fast-glob` (by @ziebam).
 
