@@ -44,8 +44,8 @@
     "@logux/eslint-config": "^53.4.0",
     "c8": "^10.1.2",
     "clean-publish": "^5.0.0",
-    "eslint": "^9.10.0",
-    "postcss": "^8.4.45"
+    "eslint": "^9.11.1",
+    "postcss": "^8.4.47"
   },
   "prettier": {
     "arrowParens": "avoid",
