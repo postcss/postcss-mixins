@@ -48,8 +48,7 @@ function loadGlobalMixin(helpers, globs) {
   let cwd = process.cwd()
   let files = globSync(globs, {
     caseSensitiveMatch: false,
-    expandDirectories: false,
-    ignore: ['**/node_modules/**', '**/.git/**']
+    expandDirectories: false
   })
   let mixins = {}
   files.forEach(i => {
