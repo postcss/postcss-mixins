@@ -45,7 +45,8 @@
     "c8": "^10.1.2",
     "clean-publish": "^5.0.0",
     "eslint": "^9.11.1",
-    "postcss": "^8.4.47"
+    "postcss": "^8.4.47",
+    "postcss-nesting": "^13.0.1"
   },
   "prettier": {
     "arrowParens": "avoid",

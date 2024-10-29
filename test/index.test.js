@@ -5,8 +5,8 @@ let postcss = require('postcss')
 
 let mixins = require('../')
 
-async function run(input, output, opts) {
-  let result = await postcss([mixins(opts)]).process(input, { from: undefined })
+async function run(input, output, opts, modifyPlugins = (plugins) => plugins) {
+  let result = await postcss(modifyPlugins([mixins(opts)])).process(input, { from: undefined })
   equal(result.css, output)
   equal(result.warnings().length, 0)
   return result
@@ -517,4 +517,14 @@ test('passes single-arg to the nested function mixin', async () => {
       }
     }
   })
+})
+
+test('supports postcss-nesting plugin', async () => {
+  await run(
+    '@define-mixin a { &:hover { a: 1; } }' +
+    'div { &:active { @mixin a; } }',
+    'div:active:hover { a: 1; }',
+    {},
+    (plugins) => [...plugins, require('postcss-nesting')()],
+  );
 })
