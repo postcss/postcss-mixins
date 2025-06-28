@@ -1,6 +1,10 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 12.0.0
+* Updates SugarSS.
+* Removed Node.js 18 support.
+
 ## 11.0.3
 * Fixed `node_modules` support in `mixinsFiles` (by @SuperchupuDev).
 
