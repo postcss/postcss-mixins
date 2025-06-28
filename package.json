@@ -37,7 +37,7 @@
   "dependencies": {
     "postcss-js": "^4.0.1",
     "postcss-simple-vars": "^7.0.1",
-    "sugarss": "^4.0.1",
+    "sugarss": "^5.0.0",
     "tinyglobby": "^0.2.7"
   },
   "devDependencies": {
