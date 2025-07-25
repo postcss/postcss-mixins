@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 12.1.1
+* Fixed types.
+
 ## 12.1.0
 * Added TypeScript support.
 
