@@ -1,15 +1,17 @@
 import type { PluginCreator, AtRule } from 'postcss'
 
-export type MixinOutput = Record<string, string | MixinOutput>
+declare interface MixinOutput {
+  [key: string]: string | MixinOutput
+}
 
-export interface Mixin {
+declare interface Mixin {
   (mixinAtRule: AtRule, ...args: string[])
 }
 
-export type Mixins = Record<string, MixinOutput | Mixin>
+declare type Mixins = Record<string, MixinOutput | Mixin>
 
 declare const mixins: PluginCreator<{
-  mixins: Mixins
+  mixins?: Mixins
   mixinsDir?: string | string[]
   mixinsFiles?: string | string[]
   silent?: boolean
