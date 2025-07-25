@@ -17,4 +17,4 @@ declare const mixins: PluginCreator<{
   silent?: boolean
 }>
 
-export default mixins
+export = mixins
