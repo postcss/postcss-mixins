@@ -11,40 +11,40 @@ and [postcss-nested].
 
 ```css
 @define-mixin icon $network, $color: blue {
-    .icon.is-$(network) {
-        color: $color;
-        @mixin-content;
-    }
-    .icon.is-$(network):hover {
-        color: white;
-        background: $color;
-    }
+  .icon.is-$(network) {
+    color: $color;
+    @mixin-content;
+  }
+  .icon.is-$(network):hover {
+    color: white;
+    background: $color;
+  }
 }
 
 @mixin icon twitter {
-    background: url(twt.png);
+  background: url(twt.png);
 }
 @mixin icon youtube, red {
-    background: url(youtube.png);
+  background: url(youtube.png);
 }
 ```
 
 ```css
 .icon.is-twitter {
-    color: blue;
-    background: url(twt.png);
+  color: blue;
+  background: url(twt.png);
 }
 .icon.is-twitter:hover {
-    color: white;
-    background: blue;
+  color: white;
+  background: blue;
 }
 .icon.is-youtube {
-    color: red;
-    background: url(youtube.png);
+  color: red;
+  background: url(youtube.png);
 }
 .icon.is-youtube:hover {
-    color: white;
-    background: red;
+  color: white;
+  background: red;
 }
 ```
 
@@ -52,16 +52,16 @@ and [postcss-nested].
 For simple cases you can use [postcss-define-property].
 
 [postcss-define-property]: https://github.com/daleeidd/postcss-define-property
-[postcss-utilities]:       https://github.com/ismamz/postcss-utilities
-[postcss-simple-vars]:     https://github.com/postcss/postcss-simple-vars
-[postcss-nested]:          https://github.com/postcss/postcss-nested
-[PostCSS]:                 https://github.com/postcss/postcss
+[postcss-utilities]: https://github.com/ismamz/postcss-utilities
+[postcss-simple-vars]: https://github.com/postcss/postcss-simple-vars
+[postcss-nested]: https://github.com/postcss/postcss-nested
+[PostCSS]: https://github.com/postcss/postcss
 
-<a href="https://evilmartians.com/?utm_source=postcss-mixins">
-  <img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg"
-       alt="Sponsored by Evil Martians" width="236" height="54">
-</a>
+---
 
+<img src="https://cdn.evilmartians.com/badges/logo-no-label.svg" alt="" width="22" height="16" />  PostCSS Mixins is built by <b><a href="https://evilmartians.com/">Evil Martians</a></b>, an American design and engineering consultancy for <b>developer tools, AI, and cybersecurity startups</b>.
+
+---
 
 ## Usage
 
@@ -90,7 +90,6 @@ module.exports = {
 }
 ```
 
-
 ### CSS Mixin
 
 Simple template defined directly in CSS to prevent repeating yourself.
@@ -101,24 +100,23 @@ You can use it with [postcss-nested] plugin:
 
 ```css
 @define-mixin icon $name {
-    padding-left: 16px;
-    &::after {
-        content: "";
-        background: url(/icons/$(name).png);
-    }
+  padding-left: 16px;
+  &::after {
+    content: '';
+    background: url(/icons/$(name).png);
+  }
 }
 
 .search {
-    @mixin icon search;
+  @mixin icon search;
 }
 ```
 
 Unlike Sass, PostCSS has no `if` or `while` statements. If you need some
 complicated logic, you should use function mixin.
 
-[postcss-nested]:      https://github.com/postcss/postcss-nested
+[postcss-nested]: https://github.com/postcss/postcss-nested
 [postcss-simple-vars]: https://github.com/postcss/postcss-simple-vars
-
 
 ### Function Mixin
 
@@ -139,20 +137,20 @@ See [PostCSS API](https://postcss.org/api/) about nodes API.
 
 ```js
 require('postcss-mixins')({
-    mixins: {
-        icons: function (mixin, dir) {
-            fs.readdirSync('/images/' + dir).forEach(function (file) {
-                var icon = file.replace(/\.svg$/, '');
-                var rule = postcss.rule({ selector: '.icon.icon-' + icon });
-                rule.append({
-                    prop:  'background',
-                    value: 'url(' + dir + '/' + file + ')'
-                });
-                mixin.replaceWith(rule);
-            });
-        }
+  mixins: {
+    icons: function (mixin, dir) {
+      fs.readdirSync('/images/' + dir).forEach(function (file) {
+        var icon = file.replace(/\.svg$/, '')
+        var rule = postcss.rule({ selector: '.icon.icon-' + icon })
+        rule.append({
+          prop: 'background',
+          value: 'url(' + dir + '/' + file + ')'
+        })
+        mixin.replaceWith(rule)
+      })
     }
-});
+  }
+})
 ```
 
 ```css
@@ -160,61 +158,65 @@ require('postcss-mixins')({
 ```
 
 ```css
-.icon.icon-back { background: url(signin/back.svg) }
-.icon.icon-secret { background: url(signin/secret.svg) }
+.icon.icon-back {
+  background: url(signin/back.svg);
+}
+.icon.icon-secret {
+  background: url(signin/secret.svg);
+}
 ```
 
 You can also return an object if you don’t want to create each node manually:
 
 ```js
 require('postcss-mixins')({
-    mixins: {
-        image: function (mixin, path, dpi) {
-            return {
-                '&': {
-                    background: 'url(' + path + ')'
-                },
-                ['@media (min-resolution: '+ dpi +'dpi)']: {
-                    '&': {
-                        background: 'url(' + path + '@2x)'
-                    }
-                }
-            }
+  mixins: {
+    image: function (mixin, path, dpi) {
+      return {
+        '&': {
+          background: 'url(' + path + ')'
+        },
+        ['@media (min-resolution: ' + dpi + 'dpi)']: {
+          '&': {
+            background: 'url(' + path + '@2x)'
+          }
         }
+      }
     }
-});
+  }
+})
 ```
 
 Mixin body will be in `mixin.nodes`:
 
 ```js
-var postcss = require('postcss');
+var postcss = require('postcss')
 
 require('postcss-mixins')({
-    mixins: {
-        hover: function (mixin) {
-            let rule = postcss.rule({ selector: '&:hover, &.hover' });
-            rule.append(mixin.nodes);
-            mixin.replaceWith(rule);
-        }
+  mixins: {
+    hover: function (mixin) {
+      let rule = postcss.rule({ selector: '&:hover, &.hover' })
+      rule.append(mixin.nodes)
+      mixin.replaceWith(rule)
     }
-});
+  }
+})
 ```
 
 Or you can use object instead of function:
 
 ```js
 require('postcss-mixins')({
-    mixins: {
-        clearfix: {
-            '&::after': {
-                content: '""',
-                display: 'table',
-                clear: 'both'
-            }
-        }
+  mixins: {
+    clearfix: {
+      '&::after': {
+        content: '""',
+        display: 'table',
+        clear: 'both'
+      }
     }
-});
+  }
+})
 ```
 
 ### Mixin Content
@@ -246,16 +248,20 @@ could be used like this:
 
 ```scss
 .foo {
-    color: blue;
+  color: blue;
 
-    @mixin isIE {
-        color: red;
-    }
+  @mixin isIE {
+    color: red;
+  }
 }
 
 // output
-.foo { color: blue; }
-.isIE .foo { color: red; }
+.foo {
+  color: blue;
+}
+.isIE .foo {
+  color: red;
+}
 ```
 
 ### Mixin parameters with comma
@@ -357,7 +363,7 @@ to target or not target specific files.
 
 ```js
 require('postcss-mixins')({
-    mixinsFiles: path.join(__dirname, 'mixins', '!(*.spec.js)')
+  mixinsFiles: path.join(__dirname, 'mixins', '!(*.spec.js)')
 })
 ```
 
