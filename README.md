@@ -146,7 +146,7 @@ require('postcss-mixins')({
           prop: 'background',
           value: 'url(' + dir + '/' + file + ')'
         })
-        mixin.replaceWith(rule)
+        mixin.before(rule)
       })
     }
   }
@@ -237,8 +237,12 @@ or JS mixins:
 ```js
 require('postcss-mixins')({
     mixins: {
-        isIe: function () {
-            '@mixin-content': {},
+        isIE: function () {
+            return {
+                '.isIE &': {
+                    '@mixin-content': {}
+                }
+            }
         }
     }
 });
