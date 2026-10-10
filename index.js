@@ -137,7 +137,7 @@ function unwrapSingleArguments(rules, singleArgumentsMap) {
         }
         rule.value = newValue
       }
-    } else if (rule.type === 'rule') {
+    } else if (rule.nodes) {
       unwrapSingleArguments(rule.nodes, singleArgumentsMap)
     }
   }

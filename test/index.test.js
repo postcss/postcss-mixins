@@ -497,6 +497,29 @@ test('handles single-arg inside rules', async () => {
   )
 })
 
+test('handles single-arg inside nested at-rules', async () => {
+  await run(
+    '@define-mixin fonts $x { @media screen { @supports (display: grid) ' +
+      '{ .a { font-family: $x } } } } @mixin fonts single-arg(Arial, sans-serif);',
+    '@media screen { @supports (display: grid) ' +
+      '{ .a { font-family: Arial, sans-serif } } }'
+  )
+})
+
+test('handles single-arg in object mixin at-rules', async () => {
+  await run(
+    '@mixin fonts single-arg(Arial, sans-serif);',
+    '@media screen {\n    font-family: Arial, sans-serif\n}',
+    {
+      mixins: {
+        fonts(rule, font) {
+          return { '@media screen': { fontFamily: font } }
+        }
+      }
+    }
+  )
+})
+
 test('passes single-arg to the nested mixin', async () => {
   await run(
     '@define-mixin a $p { a: $p; } ' +
